@@ -1,0 +1,102 @@
+import string
+# from celery import shared_task
+from event.models import Event,UserInvites,BeerCheckIn
+from users.models import User
+from notification.models import Message, Notification
+from datetime import datetime,timedelta
+from django.core.management.base import BaseCommand
+from base.utils.utilities import send_notification,create_notification
+
+def checkin_user():
+    event_active = Event.objects.filter(is_active = True)
+    if event_active.exists():
+        for event in event_active:
+            new_obj = BeerCheckIn.objects.filter(event=event,status = True)
+            beer_checkin_obj = []
+            now_time = datetime.now().strftime('%Y-%m-%d %H:%M')
+
+            for x in new_obj:
+                if now_time == (x.checkin_at + timedelta(minutes=2)).strftime('%Y-%m-%d %H:%M'):
+                    beer_checkin_obj.append(x)
+
+            if beer_checkin_obj:
+                admin_obj = User.objects.filter(groups__name='admin')
+                for checkin_user in beer_checkin_obj:
+                    sender_obj = admin_obj[0]
+                    sender_id = sender_obj.id
+                    sender_profile = request.build_absolute_uri(
+                            admin_obj[0].profile_img.url) if admin_obj[0].profile_img else ""
+                    receiver_obj = checkin_user.user
+                    obj_id = checkin_user.event.id
+                    notification_type = 4  ## 1st checkout ###
+                    if checkin_user.notification_count == None: ## For first time checking
+                        checkin_user.notification_count = 1
+                        checkin_user.save()
+                        message_obj = Message.objects.get(title="cron-checkout", type="cron-first")
+                        message = message_obj.text_message.format(beershop = checkin_user.beer.name)
+                        message_title = message_obj.message_title
+                        notification_id = create_notification(sender_obj, receiver_obj, message, obj_id,
+                                                              title_base="cron-checkout", type_base="cron-first",
+                                                              title_user=message_title, status="delete",
+                                                              )
+                    # elif checkin_user.notification_count == "1": ## for second time checking
+                    #     checkin_user.notification_count = 2
+                    #     checkin_user.status = False
+                    #     checkin_user.save()
+                    #     event.is_active = False
+                    #     event.save()
+                    #     message_obj = Message.objects.get(title="cron-checkout", type="cron-second")
+                    #     message = message_obj.text_message.format(beershop = checkin_user.beer.name)
+                    #     message_title = message_obj.message_title
+                    #     notification_id = create_notification(sender_obj, receiver_obj, message, obj_id,
+                    #                                           title_base="cron-checkout", type_base="cron-second",
+                    #                                           title_user=message_title, status="unread"
+                    #                                           )
+                    try:
+                        send_notification(receiver_obj, notification_id, notification_type, message,
+                                      message_title, sender_profile, sender_id,obj_id=str(checkin_user.beer.id))
+                    except:
+                        pass
+            else:
+                event.is_active = False
+                event.save()
+
+
+def checkout_user():
+    new_obj = BeerCheckIn.objects.filter(status=True)
+    beer_checkin_obj = []
+    now_time = datetime.now().strftime('%Y-%m-%d %H:%M')
+
+    for x in new_obj:
+        if now_time == (x.checkin_at + timedelta(minutes=4)).strftime('%Y-%m-%d %H:%M'):
+            beer_checkin_obj.append(x)
+
+
+    if beer_checkin_obj.exists():
+        admin_obj = User.objects.filter(groups__name='admin')
+        for checkin_user in beer_checkin_obj:
+            sender_obj = admin_obj[0]
+            sender_id = sender_obj.id
+            sender_profile = request.build_absolute_uri(
+                            admin_obj[0].profile_img.url) if admin_obj[0].profile_img else ""
+            receiver_obj = checkin_user.user
+            obj_id = checkin_user.event.id
+            notification_type = 3  ## checkout ###
+            message_obj = Message.objects.get(title="cron-checkout", type="cron-second")
+            message = message_obj.text_message.format(beershop = checkin_user.beer.name)
+            message_title = message_obj.message_title
+            notification_id = create_notification(sender_obj, receiver_obj, message, obj_id,
+                                                  title_base="cron-checkout", type_base="cron-second",
+                                                  title_user=message_title, status="unread"
+                                                  )
+        try:
+            send_notification(receiver_obj, notification_id, notification_type, message,
+                              message_title, sender_profile, sender_id)
+        except:
+            pass
+        beer_checkin_obj.update(status=False)
+
+    notification_obj = Notification.objects.filter(title_base="invite", type_base="pending")
+    if notification_obj.exists():
+        notification_obj.update(status="delete")
+

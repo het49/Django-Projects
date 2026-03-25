@@ -1,0 +1,92 @@
+{% include "brewery/web/admin/common/header.html" %}
+{% load static %}
+{% get_static_prefix as STATIC %}
+ <div class="panel-header panel-header-sm">
+      </div>
+      <div class="content">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="title">Create Offers</h5>
+              </div>
+              <div class="card-body" id="results">
+                <form method="POST" action="" enctype="multipart/form-data" id="brewery-form">
+                	{% csrf_token %}
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label class="font-weight-bold text-dark">Offer Title</label>
+                        <input type="text" class="form-control" name="offer_title" placeholder="Title for offer" required>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label class="font-weight-bold text-dark">Offer Description</label>
+                        <input type="text" class="form-control" name="offer_desc" placeholder="Description about offer" required>
+                      </div>
+                    </div>
+                  </div>
+                  <!--  -->
+                  <div class="row">
+                    <div class="col-md-12">
+                      <label class="form-label font-weight-bold text-dark" for="offer_img">Offer Image</label>
+                      <input type="file" id="offer_img"  name="offer_image" class="form-control" placeholder="upload" value="Upload" required />
+                    </div>
+                  </div>
+                  <!--  --><br>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="font-weight-bold text-dark">Start Date</label>
+    <input type="text" id="startdate" class="form-control" name="start_date" placeholder="MM-DD-YYYY"required>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label class="font-weight-bold text-dark">End Date</label>
+                        <input type="text" id="enddate" class="form-control" name="end_date" placeholder="MM-DD-YYYY" required>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- map -->
+              
+                  <!-- end -->
+                  <!-- <div class="row">
+                    <div class="col-md-12">
+                      <div class="form-group">
+                        <label class="font-weight-bold text-dark">About Offer</label>
+                        <textarea rows="4" cols="80" name="desc" class="form-control" placeholder="Here can be your offer's description" required></textarea>
+                      </div>
+                    </div>
+                  </div> -->
+                  <!-- button -->
+                  <div class="row justify-content-center">
+                    <div class="col-md-3 pr-1">
+                      <div class="form-group">
+                        <!-- <label>About Me</label> -->
+                        <button type="submit" id="getdata" class="form-control font-weight-bold"> Save Offer</button>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- end -->
+                  <!-- message -->
+                  <div class="col-md-6">
+                      <div class="form-group">
+          <center><label class="font-weight-bold text-dark">{{msg}}</label></center>
+                      </div>
+                    </div>
+                  <!--  -->
+                </form>
+              </div>
+            </div>
+          </div>
+          <!-- side profile data -->
+          
+          <!-- side profile data -->
+        </div>
+      </div>
+      
+{% include "brewery/web/admin/common/footer.html" %}

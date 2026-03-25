@@ -1,0 +1,143 @@
+{% include "users/web/admin/common/header.html" %}
+{% load static %}
+{% get_static_prefix as STATIC %}
+{% include "users/web/admin/common/menu.html" %}
+
+<title>BeerBuddy:EventDetails</title>
+  <div id="page-wrapper">
+            <div class="row page-titles">
+                <div class="col-md-5 align-self-center">
+                    <h3 class="text-themecolor">Event Details</h3>
+                </div>
+                <div class="col-md-7 align-self-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/web/events/event_management/">Event</a></li>
+                        <li class="breadcrumb-item active">Event Details</li>
+                    </ol>
+                </div>
+            </div>
+
+<div class="container-fluid">
+<div class="row">
+    <div class="col-md-12 col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <div class="table-wrapper">
+                       <div class="row">
+
+                         <div class="col-sm-4 table-responsive">
+                             <div class="panel-body text-center">
+                                 {% if event_obj.created_by.profile_img %}
+                                        <img src="{{event_obj.created_by.profile_img.url}}"  alt="Avatar" style="width:120px;height:120px;;">
+                                         {% else %}
+                                        <img src="{% static 'assets/img/default-profile.png' %}" alt="Default"  style="width:120px;height:120px;">
+                                        {% endif %}
+
+                        </div>
+                         </div>
+                           <div class="col-sm-4 table-responsive">
+                             <div class="panel-body">
+                                 <div class="form-group">
+                                     <div class="col-md-12"><label class="form-label"><b>Event Organizer:</b></label></div>
+                                     <div class="col-md-12">
+                                      {{event_obj.created_by.get_full_name}}
+
+                                     </div>
+                                 </div>
+                                 <div class="form-group">
+                                    <div class="col-md-12"><label class="form-label"><b>Address:</b></label></div>
+                                    <div class="col-md-12">
+                                    {{event_obj.beer_shop.vicinity}}
+
+                                    </div>
+                                </div>
+
+                                            </div>
+                                        </div>
+                           <div class="col-sm-4 table-responsive">
+                             <div class="panel-body">
+                                 <div class="form-group">
+                                     <div class="col-md-12"><label class="form-label"><b>Beer Shop:</b></label></div>
+                                     <div class="col-md-12">
+                                       {{event_obj.beer_shop.name}}
+
+                                     </div>
+                                 </div>
+
+                                 <div class="form-group">
+                                    <div class="col-md-12"><label class="form-label"><b>Created At:</b></label></div>
+                                    <div class="col-md-12">
+                                        {{event_obj.created_at}}
+
+
+                                    </div>
+                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <h4><strong>Invitee List</strong></h4>
+                                <table class="table table-striped table-hover table-sm table-responsive no-footer">
+
+                                        <tr>
+                                        <th><b>Sr.No</b></th>
+                                        <th><b>Profile Pic</b></th>
+                                        <th><b>Name</b></th>
+                                        <th><b>City</b></th>
+                                        <th><b>State</b></th>
+                                        <th><b>Checkin At</b></th>
+
+                                        </tr>
+                                </thead>
+                                    <tbody>
+
+                                     {% for invites in invitee_list %}
+
+                                     <tr>
+                                      <td >{{forloop.counter}}</td>
+                                         <td>
+                                         {% if invites.invitee.profile_img %}
+                                        <img src="{{invites.invitee.profile_img.url}}"  alt="Avatar" height="50" width="50">
+                                         {% else %}
+                                        <img src="{% static 'assets/img/default-profile.png' %}"alt="Default"  height="50" width="50">
+                                        {% endif %}
+
+                                       </td>
+                                         </td>
+                                      <td >{% if invites.invitee.get_full_name %}{{invites.invitee.get_full_name}}{% else %}{% endif %}</td>
+                                      <td >{% if invites.invitee.city %}{{invites.invitee.city}}{% else %}{% endif %}</td>
+                                      <td >{% if invites.invitee.state %}{{invites.invitee.state}}{% else %}{% endif %}</td>
+                                         <td>{% if invites.invitee_checkin %}{{invites.invitee_checkin}}{% else %}{% endif %}</td>
+
+
+
+
+
+                                         </tr>
+
+                                         {% endfor %}
+
+                                        </tbody>
+
+                                         </table>
+
+
+                                            </div>
+
+                                        </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+  </div>
+
+
+
+{% include "users/web/admin/common/footer.html" %}

@@ -1,0 +1,422 @@
+
+from rest_framework import generics
+from rest_framework.permissions import (
+    AllowAny, )
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from users.api.permissions import IsAllowed
+from users.models import User,UserFriend
+from notification.models import Message
+from django.db.models import Q
+from event.models import UserInvites,Event,BeerCheckIn
+from beershop.models import BeerDetail,UserFavourite,CheckOutImage,Rating
+from beershop.api.serializers import (GetBeerDetailSerializer,BeerDetailSerializer,GetUserContactSerializer,BeerCheckInSerializer,RatingSerializer,GetRatingSerializer,
+BeerCheckOutSerializer,CheckoutImageSerializer,GetUserFriendSerializer,GetUserFavouriteSerializer,UserFavouriteSerializer)
+from base.utils.utilities import (validate_headers,error_response,success_response,save_beer_detail_json,get_favourite,get_user_check_in,
+                                  get_total_users_check_in,get_avg_rating,create_notification,send_notification)
+
+
+
+class AddBeerDetailAPIView(APIView):
+    permission_classes = [IsAllowed]
+
+    def get(self, request, *args, **kwargs):
+
+        data = request.data
+        serializer = GetBeerDetailSerializer(data=data)
+        if serializer.is_valid(raise_exception=True):
+            platform = request.META.get('HTTP_PLATFORM', None)
+            device_token = request.META.get('HTTP_DEVICE_TOKEN', None)
+            device_id = request.META.get('HTTP_DEVICE_ID', None)
+            app_version = request.META.get('HTTP_APP_VERSION', None)
+
+            validate_headers(platform, device_id, app_version)
+            id = data["id"]
+
+            try:
+                beerdetail_obj = BeerDetail.objects.get(google_id=id)
+
+            except:
+                message = "Beer Detail is not available with us."
+                return_data = {}
+                return error_response(message, return_data)
+
+
+        serializers = BeerDetailSerializer(beerdetail_obj)
+        message = "success"
+        return_data = serializers.data
+        return success_response(message, return_data)
+
+
+    def post(self,request,*args,**kwargs):
+        data = request.data
+        return_data = {}
+        beerdetails = []
+        for item in data:
+            id = save_beer_detail_json(item)
+            beershopdetail = BeerDetail.objects.get(google_id=id)
+            user_obj = request.user
+            favourite = get_favourite(user_obj, beershopdetail)
+            rating = get_avg_rating(beershopdetail)
+            total_users_check_in = get_total_users_check_in(beershopdetail,user_obj.id)
+            user_check_in = get_user_check_in(user_obj,beershopdetail)
+            beer_checkin = BeerCheckIn.objects.filter(beer=beershopdetail).order_by("-updated_at")
+            if beer_checkin.exists():
+                images_list = []
+                for images in beer_checkin:
+                    images = CheckoutImageSerializer(images.images, many = True,context={'request': request})
+                    for image in images.data:
+                        images_list.append(image['image'])
+                images_count = len(images_list)
+                images_list.insert(0,images_count)
+            else:
+                images_list =[]
+
+            beerdetail = {
+                "beer_shop_id": beershopdetail.id,
+                "beer_shop_name": beershopdetail.name,
+                "beer_shop_google_id": beershopdetail.google_id,
+                "total_users_checkin": total_users_check_in,
+                "rating": rating,
+                "favorite": favourite,
+                "user_check_in":user_check_in,
+                "checkout_images":images_list
+            }
+            friend_obj = user_obj.requested_user.filter(status="accepted")
+            user_info_list = []
+            if friend_obj.exists():
+                for friends in friend_obj:
+                    beer_check_in = BeerCheckIn.objects.filter(user = friends.friend,beer = beershopdetail,status = True)
+                    if beer_check_in.exists():
+                        serializer = GetUserContactSerializer(friends.friend, context={'request': request})
+                        user_info = serializer.data
+                        user_info_list.append(user_info)
+
+            friend_obj = user_obj.friend_user.filter(status="accepted")
+            if friend_obj.exists():
+                for friends in friend_obj:
+                    beer_check_in = BeerCheckIn.objects.filter(user = friends.user,beer = beershopdetail,status = True)
+                    if beer_check_in.exists():
+                        serializer = GetUserContactSerializer(friends.user, context={'request': request})
+                        user_info = serializer.data
+                        user_info_list.append(user_info)
+
+            beerdetail["user_contact_list"] = user_info_list
+            beerdetail["user_contact_list_length"] = len(user_info_list)
+            beerdetails.append(beerdetail)
+        return_data = {"beershopdetails": sorted(beerdetails, key=lambda k: k['user_contact_list_length'], reverse=True)}
+        message = "success"
+        return success_response(message,return_data)
+
+
+
+class BeerCheckInAPIView(APIView):
+    permission_classes = [IsAllowed]
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        serializer = BeerCheckInSerializer(data=data)
+        if serializer.is_valid(raise_exception=True):
+            platform = request.META.get('HTTP_PLATFORM', None)
+            device_token = request.META.get('HTTP_DEVICE_TOKEN', None)
+            device_id = request.META.get('HTTP_DEVICE_ID', None)
+            app_version = request.META.get('HTTP_APP_VERSION', None)
+
+            validate_headers(platform, device_id, app_version)
+            return_data = {}
+            beer_id = data["beer_id"]
+            user_obj = request.user
+
+            try:
+                beerdetail_obj = BeerDetail.objects.get(id=beer_id)
+            except:
+                message = "Beer Detail is not available with us."
+                return error_response(message, return_data)
+            beercheckin_obj = BeerCheckIn.objects.filter(user=user_obj, status=True)
+            if not beercheckin_obj.exists():
+                user_invited = UserInvites.objects.filter(invitee=user_obj, event__beer_shop=beerdetail_obj,event__is_active=True, event__is_delete=False)
+                user_invitee = UserInvites.objects.filter(user=user_obj, event__beer_shop=beerdetail_obj,event__is_active=True, event__is_delete=False,status = "accepted")
+                if user_invitee.exists():
+                    beercheck_obj = BeerCheckIn.objects.create(user=user_obj, event=user_invitee[0].event,
+                                                               beer=beerdetail_obj, status=True)
+
+                    for user_invite_obj in user_invitee:
+                        receiver_obj = user_invite_obj.invitee
+                        sender_obj = user_obj
+                        sender_id = user_obj.id
+                        sender_profile = request.build_absolute_uri(
+                            user_obj.profile_img.url) if user_obj.profile_img else ""
+                        obj_id = user_invite_obj.event.id
+                        notification_type = 2  ### checkin type ####
+                        try:
+                            message_obj = Message.objects.get(title="checkin", type="other")
+                            message = message_obj.text_message.format(username=sender_obj.first_name,
+                                                                      beershop=beerdetail_obj.name)
+                            message_title = message_obj.message_title
+                            notification_id = create_notification(sender_obj,receiver_obj,message,obj_id,title_base ="checkin",type_base = "other",title_user = message_title,
+                                                                  status = "unread",user_status = "")
+                            send_notification(receiver_obj, notification_id, notification_type, message, message_title,sender_profile, sender_id,str(obj_id))
+                        except:
+                            pass
+
+
+                if user_invited.exists():
+                    beercheck_obj = BeerCheckIn.objects.create(user=user_obj, event=user_invited[0].event,
+                                                               beer=beerdetail_obj, status=True)
+                    for user_invite_obj in user_invited:
+
+                        receiver_obj = user_invite_obj.user
+                        sender_obj = user_obj
+                        sender_id = user_obj.id
+                        sender_profile = request.build_absolute_uri(
+                            user_obj.profile_img.url) if user_obj.profile_img else ""
+                        obj_id = user_invite_obj.event.id
+                        notification_type = 2  ### checkin type ####
+                        try:
+                            message_obj = Message.objects.get(title="checkin", type="other", is_active=True)
+                            message = message_obj.text_message.format(username=sender_obj.first_name,
+                                                                      beershop=beerdetail_obj.name)
+                            message_title = message_obj.message_title
+                            notification_id = create_notification(sender_obj, receiver_obj, message, obj_id,
+                                                                  title_base="checkin", type_base="other",
+                                                                  title_user=message_title,
+                                                                  status="unread", user_status="")
+                            send_notification(receiver_obj, notification_id, notification_type, message, message_title,
+                                              sender_profile, sender_id, str(obj_id))
+
+                        except:
+                            pass
+
+                        event_invite = UserInvites.objects.filter(user = user_invite_obj.user,event__beer_shop=beerdetail_obj,event__is_active=True, event__is_delete=False,status = "accepted").exclude(invitee=user_obj)
+                        if event_invite.exists():
+                            for invite_obj in event_invite:
+                                receiver_obj = invite_obj.invitee
+                                sender_obj = user_obj
+                                sender_id = user_obj.id
+                                sender_profile = request.build_absolute_uri(
+                                    user_obj.profile_img.url) if user_obj.profile_img else ""
+                                obj_id = user_invite_obj.event.id
+                                notification_type = 2  ### checkin type ####
+                                try:
+                                    message_obj = Message.objects.get(title="checkin", type="other",is_active = True)
+                                    message = message_obj.text_message.format(username=sender_obj.first_name,
+                                                                              beershop=beerdetail_obj.name)
+                                    message_title = message_obj.message_title
+                                    notification_id = create_notification(sender_obj, receiver_obj, message, obj_id,
+                                                                          title_base="checkin", type_base="other",title_user=message_title,status="unread", user_status="")
+                                    send_notification(receiver_obj, notification_id, notification_type, message,
+                                                      message_title,sender_profile, sender_id,str(obj_id))
+                                except:
+                                    pass
+
+                if not(user_invited.exists() or user_invitee.exists()):
+                    new_event_obj = Event.objects.create(name=beerdetail_obj.name, created_by=user_obj,
+                                                         beer_shop=beerdetail_obj)
+                    beercheck_obj = BeerCheckIn.objects.create(user=user_obj,event =new_event_obj, beer=beerdetail_obj, status=True)
+                    sender_obj = user_obj
+                    sender_id = user_obj.id
+                    sender_profile = request.build_absolute_uri(
+                        user_obj.profile_img.url) if user_obj.profile_img else ""
+                    obj_id = new_event_obj.id
+                    user_friend = UserFriend.objects.filter(user=user_obj, status="accepted")
+                    user_accepted_friend = UserFriend.objects.filter(friend=user_obj, status="accepted")
+
+                    if user_friend.exists():
+                        for friend_obj in user_friend:
+                            receiver_obj = friend_obj.friend
+                            try:
+                                message_obj = Message.objects.get(title="checkin", type="other")
+                                message = message_obj.text_message.format(username=sender_obj.first_name,
+                                                                          beershop=beerdetail_obj.name)
+                                message_title = message_obj.message_title
+                                notification_type = 2  ### checkin type ####
+                                notification_id = create_notification(sender_obj, receiver_obj, message, obj_id,
+                                                                      title_base="checkin", type_base="other",
+                                                                      title_user=message_title, status="unread",user_status="")
+                            except:
+                                pass
+
+                    if user_accepted_friend.exists():
+                        for friend_obj in user_accepted_friend:
+                            receiver_obj = friend_obj.user
+                            try:
+                                message_obj = Message.objects.get(title="checkin", type="other")
+                                message = message_obj.text_message.format(username=sender_obj.first_name,
+                                                                          beershop=beerdetail_obj.name)
+                                message_title = message_obj.message_title
+                                notification_type = 2  ### checkin type ####
+                                notification_id = create_notification(sender_obj, receiver_obj, message, obj_id,
+                                                                      title_base="checkin", type_base="other",
+                                                                      title_user=message_title, status="unread",user_status="")
+                            except:
+                                pass
+
+
+            else:
+                message = "Already Checked In at {beershop}".format(beershop = beercheckin_obj[0].beer.name)
+                return_data ={
+                    "beer_id":beercheckin_obj[0].beer.id,
+                    "beer_name":beercheckin_obj[0].beer.name
+                }
+                return success_response(message, return_data)
+
+            if 'check_in_status'in data:
+                beercheck_obj.message = data["check_in_status"]
+                beercheck_obj.save()
+        message = "success"
+        return success_response(message, return_data)
+
+
+class BeerCheckOutAPIView(APIView):
+    permission_classes = [IsAllowed]
+
+    def post(self, request, *args,**kwargs):
+        import pdb;pdb.set_trace()
+        data = request.data
+        serializer = BeerCheckOutSerializer(data=data)
+        if serializer.is_valid(raise_exception=True):
+            platform = request.META.get('HTTP_PLATFORM', None)
+            device_token = request.META.get('HTTP_DEVICE_TOKEN', None)
+            device_id = request.META.get('HTTP_DEVICE_ID', None)
+            app_version = request.META.get('HTTP_APP_VERSION', None)
+
+            validate_headers(platform, device_id, app_version)
+            return_data = {}
+            beer_id = data["beer_id"]
+            user_obj = request.user
+            try:
+                beerdetail_obj = BeerDetail.objects.get(id=beer_id)
+            except:
+                message = "Beer Detail is not available with us."
+                return error_response(message, return_data)
+            try:
+                beercheck_obj = BeerCheckIn.objects.get(user=user_obj, beer=beerdetail_obj, status = True)
+                event_obj = Event.objects.filter(created_by = user_obj,beer_shop = beerdetail_obj,is_active = True)
+                if event_obj.exists():
+                    event_obj.update(is_active = False)
+
+            except:
+                message = "User is already checked out."
+                return error_response(message, return_data)
+            if 'check_out_status' in data:
+                beercheck_obj.message = data["check_out_status"]
+            if 'images' in data:
+                for image in data.getlist('images'):
+                    check_out_image_obj, created = CheckOutImage.objects.get_or_create(checkout_image = image)
+                    beercheck_obj.images.add(check_out_image_obj.id)
+            beercheck_obj.status=False
+            beercheck_obj.save()
+            imagelist = []
+            beercheck_image_obj = beercheck_obj.images.all()
+            imagecheckout = CheckoutImageSerializer(beercheck_image_obj,many =True,context={'request': request})
+            for image in imagecheckout.data:
+                imagelist.append(image['image'])
+            return_data["image"]=imagelist
+            message = "success"
+            return success_response(message, return_data)
+
+
+
+class UserFavouriteAPIView(APIView):
+    permission_classes = [IsAllowed]
+
+    def get(self, request, *args, **kwargs):
+        platform = request.META.get('HTTP_PLATFORM', None)
+        device_token = request.META.get('HTTP_DEVICE_TOKEN', None)
+        device_id = request.META.get('HTTP_DEVICE_ID', None)
+        app_version = request.META.get('HTTP_APP_VERSION', None)
+
+        validate_headers(platform, device_id, app_version)
+        user_obj = request.user
+        favourite_obj = UserFavourite.objects.filter(user=user_obj, status=True).order_by("-updated_at")
+        serializer = GetUserFavouriteSerializer(favourite_obj, context={'request': request},many=True)
+        return_data = serializer.data
+        message = "success"
+        return success_response(message, return_data)
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        serializer = UserFavouriteSerializer(data=data)
+        if serializer.is_valid(raise_exception=True):
+            platform = request.META.get('HTTP_PLATFORM', None)
+            device_token = request.META.get('HTTP_DEVICE_TOKEN', None)
+            device_id = request.META.get('HTTP_DEVICE_ID', None)
+            app_version = request.META.get('HTTP_APP_VERSION', None)
+
+            validate_headers(platform, device_id, app_version)
+            return_data = {}
+            user_obj = request.user
+            beer_id = data['beer_id']
+            status = data['status']
+
+            try:
+                beerdetail_obj = BeerDetail.objects.get(id=beer_id)
+            except:
+                message = "Beer Detail is not available with us."
+                return error_response(message, return_data)
+
+            userfavourite_obj = UserFavourite.objects.filter(beer_shop = beerdetail_obj,user = user_obj)
+            if userfavourite_obj.exists():
+                userfavourite_obj.update(status = status)
+            else:
+                userfavourite_obj = UserFavourite.objects.create(beer_shop = beerdetail_obj,user = user_obj,status = status)
+        message = "success"
+        return success_response(message, return_data)
+
+
+class RatingAPIView(APIView):
+    permission_classes = [IsAllowed]
+
+    def get(self, request, *args, **kwargs):
+        data = request.GET
+        serializer = GetBeerDetailSerializer(data=data)
+        if serializer.is_valid(raise_exception=True):
+            platform = request.META.get('HTTP_PLATFORM', None)
+            device_token = request.META.get('HTTP_DEVICE_TOKEN', None)
+            device_id = request.META.get('HTTP_DEVICE_ID', None)
+            app_version = request.META.get('HTTP_APP_VERSION', None)
+            return_data ={}
+            validate_headers(platform, device_id, app_version)
+            id = data["id"]
+
+            try:
+                beerdetail_obj = BeerDetail.objects.get(id=id)
+            except:
+                message = "Beer Detail is not available with us."
+                data = {}
+                return error_response(message, data)
+
+            ratings_obj = Rating.objects.filter(beer_shop = beerdetail_obj)
+            ratings_obj = ratings_obj.order_by("-created_at")
+            serializer = GetRatingSerializer(ratings_obj, context={'request': request},many = True)
+            return_data = serializer.data
+        message = "success"
+        return success_response(message, return_data)
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        serializer = RatingSerializer(data=data)
+        if serializer.is_valid(raise_exception=True):
+            platform = request.META.get('HTTP_PLATFORM', None)
+            device_token = request.META.get('HTTP_DEVICE_TOKEN', None)
+            device_id = request.META.get('HTTP_DEVICE_ID', None)
+            app_version = request.META.get('HTTP_APP_VERSION', None)
+            validate_headers(platform, device_id, app_version)
+            return_data = {}
+            user_id = request.user.id
+            beer_id = data['beer_id']
+            rating = data['rating']
+            user_obj = request.user
+            try:
+                beerdetail_obj = BeerDetail.objects.get(id=beer_id)
+            except:
+                message = "Beer Detail is not available with us."
+                return error_response(message, return_data)
+            rating_obj = Rating.objects.create(beer_shop = beerdetail_obj,user = user_obj,rating = rating)
+            if 'feedback' in data:
+                rating_obj.feedback = data['feedback']
+            rating_obj.save()
+            message = "success"
+            return success_response(message, return_data)
+
+

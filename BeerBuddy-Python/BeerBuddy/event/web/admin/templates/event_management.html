@@ -1,0 +1,133 @@
+{% include "users/web/admin/common/header.html" %}
+{% load static %}
+{% get_static_prefix as STATIC %}
+{% include "users/web/admin/common/menu.html" %}
+
+<title>BeerBuddy:Event</title>
+  <div id="page-wrapper">
+            <div class="row page-titles">
+                <div class="col-md-5 align-self-center">
+                    <h3 class="text-themecolor">Event &nbsp;&nbsp;&nbsp;<small>Total Event [{{event_count}}]</small></h3>
+
+                </div>
+                <div class="col-md-7 align-self-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/web/users/dashboard">Home</a></li>
+                        <li class="breadcrumb-item active">Event</li>
+                    </ol>
+                </div>
+            </div>
+
+<div class="container-fluid">
+<div class="row">
+    <div class="col-md-12 col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <div class="table-wrapper">
+                       <div class="row">
+                         <div class="col-sm-12 table-responsive">
+                            <table id="datatable" class="table table-striped table-hover table-sm table-responsive">
+                                 <thead>
+                                        <tr>
+                                        <th><b>Sr.No</b></th>
+                                        <th><b>Profile Pic</b></th>
+                                        <th><b>Event Organizer</b></th>
+                                        <th><b>Event Name</b></th>
+                                        <th><b>Location</b></th>
+                                        <th><b>created_at</b></th>
+                                        <th><b>updated_at</b></th>
+                                        <th><b>Action</b></th>
+                                        </tr>
+
+                                </thead>
+                                <tbody>
+                                            {% for event in event_list %}
+                                                 <tr>
+                                                  <td >{{forloop.counter}}</td>
+                                                     <td>
+                                                     {% if event.created_by.profile_img %}
+                                                    <img src="{{event.created_by.profile_img.url}}"  alt="Avatar" height="50" width="50">
+                                                     {% else %}
+                                                    <img src="{% static 'assets/img/default-profile.png' %}" alt="Default"  height="50" width="50">
+                                                    {% endif %}
+
+                                                   </td>
+                                                  <td >{{event.created_by.get_full_name}}</td>
+                                                  <td >{{event.beer_shop.name}}</td>
+                                                  <td >{{event.beer_shop.vicinity}}</td>
+                                                  <td>{{event.created_at}}</td>
+                                                  <td>{{event.updated_at}}</td>
+                                                 <td>
+                                                <div class="d-flex">
+                                                <style>
+                                                .fa.green{color:#048c47;}
+                                                .fa.red{color:#f00;}
+                                                </style>
+                                                <div class="status-btn">
+                                                  {% if event.is_active == True %}
+                                                <a href="javascript:void(0);" ><i class="fa fa-toggle-on green status{{event.id}}" title="Active"></i></a>
+                                                {% else %}
+                                                <a href="javascript:void(0);" ><i class="fa fa-toggle-off red status{{event.id}}" title="Inactive"></i></a>
+                                                {% endif %}
+
+
+                                                </div>
+                                                    <div>
+                                                     <a href="/web/events/event_details/{{event.id}}">
+                                                    <i class="fa fa-eye" aria-hidden="true"></i></a>
+                                                    </div>
+                                                </div>
+                                                </td>
+
+                                                 </tr>
+                                                 {% endfor %}
+
+                                                </tbody>
+
+                                            </table>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+  </div>
+
+
+
+{% include "users/web/admin/common/footer.html" %}
+<script>
+
+function changeeventstatus(obj){
+      var id = obj;
+      $.ajax({
+        type: 'POST',
+        url:  '/web/events/event_status/',
+        data:  {'id': id,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        success: function (response) {
+            if(response.result == true){
+                $('.status'+id).removeClass('fa fa-toggle-off red');
+                $('.status'+id).addClass('fa fa-toggle-on green');
+                $('#msg').html('<div class="alert alert-success"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> User successfully enabled.</div>')
+            } else if(response.result == false) {
+                $('.status'+id).removeClass('fa fa-toggle-on green');
+                $('.status'+id).addClass('fa fa-toggle-off red');
+               $('#msg').html('<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Danger!</strong> User successfully disabled.</div>')
+               } else {
+                $('#msg').html('<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Danger!</strong> Something went wrong please try again.</div>')
+            }
+        }
+      });
+
+    }
+
+  </script>
+
+
+

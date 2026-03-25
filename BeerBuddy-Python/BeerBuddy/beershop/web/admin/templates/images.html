@@ -1,0 +1,151 @@
+{% include "users/web/admin/common/header.html" %}
+{% load static %}
+{% get_static_prefix as STATIC %}
+{% include "users/web/admin/common/menu.html" %}
+
+
+<style>
+.select-box{position: relative;}
+.owl-buttons{top: 45%;width: 100%;}
+.owl-prev{left: -30px;position: absolute;}
+.owl-next{right: -30px;position: absolute;}
+.perfume img{max-width:500px;max-height:400px;display:block;margin:auto;}
+.owl-prev:before,.owl-next:before{font-size: 30px;}
+.owl-carousel {padding: 0 0 0;}
+.perfume{width:500px;margin:auto;height:400px;}
+.select-multy{
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    z-index: 1;}
+
+</style>
+
+
+<title>BeerBuddy:Images</title>
+<div id="page-wrapper">
+    <div class="row page-titles">
+        <div class="col-md-5 align-self-center">
+            <h3 class="text-themecolor">Images</h3>
+        </div>
+        <div class="col-md-7 align-self-center">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/web/beershops/check-in/">Check In</a></li>
+                <li class="breadcrumb-item active">Images</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="form-group col-md-6">
+                                <div class="col-md-12"><label class="form-label"><b>Event Organizer:</b></label></div>
+                                <div class="col-md-12">
+                                    {{beercheckin_obj.0.event.created_by.get_full_name}}
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <div class="col-md-12"><label class="form-label"><b>Beer Shop:</b></label></div>
+                                <div class="col-md-12">
+                                    {{beercheckin_obj.0.beer.name}}
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12">
+                                <div class="widget default-widget" style="margin-bottom: 10px;">
+                                    {% for image in beercheckout_obj %}
+                                    <div class="select-box col-md-3 col-sm-4">
+                                        <input type="checkbox" class="select-multy" name="imageck" value="{{image.id}}">
+                                        <a href="javascript:;" data-toggle="modal" data-target="#modal-1">
+                                            <div class="my-team">
+                                                <img src="{{image.checkout_image}}" alt="">
+                                            </div>
+                                        </a>
+                                    </div>
+                                    {% endfor %}
+
+                                </div>
+
+                            </div>
+                            <p class="text-right col-md-12"><a href="javascript:void(0);" class="text-danger"
+                                                               id="deleteid"><strong>Delete</strong></a></p>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal modal-box-1 fade" id="modal-1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="perfume">
+                    <div id="perfume-carousel" class="owl-carousel">
+                        {% for image in beercheckout_obj %}
+                        <img src="{{image.checkout_image}}" class="img-responsive" alt=""/>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "users/web/admin/common/footer.html" %}
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $("#deleteid").click(function(){
+            var ids = [];
+            $.each($("input[name='imageck']:checked"), function(){
+                ids.push($(this).val());
+            });
+            ids = ids.join(',');
+            $.ajax({
+                type: 'POST',
+                url:  '/web/beershops/delete_images/',
+                data:  {'ids': ids,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+                success: function (response) {
+                var url = '/web/beershops/check-in/'
+                if(response.result == true){
+                    window.location.href = url;
+                } else if(response.result == false) {
+                    window.location.href = url;
+                   } else {
+                    return false;
+                }
+                }
+              });
+
+        });
+    });
+
+</script>
+<script>
+    $("#perfume-carousel").owlCarousel({
+items:1,
+itemsDesktop:[1199,1],
+itemsDesktopSmall:[979,1],
+itemsTablet:[768,1],
+pagination: false,
+navigation:true
+});
+
+
+</script>

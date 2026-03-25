@@ -1,0 +1,76 @@
+<footer class="footer">© 2021 Admin of beerbuddy.com </footer>
+
+  {% load static %}
+{% get_static_prefix as STATIC %}
+
+
+<!--for calender-->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+    <!--for popup-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+
+    <script src="https://code.highcharts.com/highcharts.src.js"></script>
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{{STATIC}}assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="{{STATIC}}assets/plugins/owl-carousel/js/owl.carousel.min.js"></script>
+
+
+    <!-- FLOT CHARTS -->
+    <script src="{{STATIC}}assets/plugins/flot/jquery.flot.js"></script>
+    <!-- FLOT RESIZE PLUGIN - allows the chart to redraw when the window is resized -->
+
+    <script src="{{STATIC}}assets/plugins/flot/jquery.flot.resize.js"></script>
+
+    <!-- FLOT PIE PLUGIN - also used to draw donut charts -->
+<!--    <script src="{{STATIC}}assets/plugins/flot/jquery.flot.pie.js"></script>-->
+
+    <!-- FLOT CATEGORIES PLUGIN - Used to draw bar charts -->
+<!--    <script src="{{STATIC}}assets/plugins/flot/jquery.flot.categories.js"></script>-->
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="{{STATIC}}assets/plugins/metisMenu/metisMenu.min.js"></script>
+    <script src="{{STATIC}}js/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="{{STATIC}}js/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="{{STATIC}}js/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="{{STATIC}}js/datatables.net-buttons-bs/js/buttons.bootstrap.min.js"></script>
+    <script src="{{STATIC}}js/datatables.net-buttons/js/buttons.flash.min.js"></script>
+    <script src="{{STATIC}}js/datatables.net-buttons/js/buttons.html5.min.js"></script>
+    <script src="{{STATIC}}js/datatables.net-buttons/js/buttons.print.min.js"></script>
+    <script src="{{STATIC}}js/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js"></script>
+    <script src="{{STATIC}}js/datatables.net-keytable/js/dataTables.keyTable.min.js"></script>
+    <script src="{{STATIC}}js/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="{{STATIC}}js/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+    <!--<script src="{{STATIC}}js/datatables.net-scroller/js/dataTables.scroller.min.js"></script>-->
+
+    <!-- Loader JavaScript -->
+    <!-- Custom Theme JavaScript -->
+    <script src="{{STATIC}}js/bbuddy.min.js"></script>
+
+    <script src="{{STATIC}}js/custom.min.js"></script>
+
+
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+
+
+  <script>
+   $( function() {
+   $( "#datepicker" ).datepicker({
+      dateFormat: "yy-mm-dd",
+      maxDate: new Date()
+   });
+     } );
+ </script>
+
+<script>
+
+$('#datatable').DataTable( {
+
+});
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,383 @@
+body {
+    background-color: #eef5f9;
+    color: #6b7b84;
+}
+
+a {
+    color: #6b7b84;
+}
+
+a:hover,
+body a:focus {
+    color: #62748F;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #455a64;
+}
+
+#page-wrapper {
+    background-color: #eef5f9;
+}
+
+/*-------Common Style--------*/
+
+h3.text-themecolor {
+    color: #000000;
+}
+
+li.breadcrumb-item a {
+    color: #0084ff;
+}
+
+.sidebar-nav.navbar-collapse .nav > li > a:hover i.fa,
+.sidebar-nav.navbar-collapse .nav > li > a:focus i.fa {
+    color: #000000 !important;
+}
+
+.table-wrapper .pagination li.active a,
+.table-wrapper .pagination li.active a.page-link {
+    background: #03A9F4;
+}
+
+button.btn.btn-primary.nextBtn.btn-lg.pull-right {
+    background: #0084ff;
+    border-color: #0084ff;
+}
+
+.stepwizard a.btn.circle-button.active-wizard {
+    background: #0084ff;
+    border-color: #0084ff;
+}
+
+.stepwizard .circle-button:hover,
+.stepwizard .circle-button:focus {
+    background: #0084ff;
+    border-color: #0084ff;
+}
+
+button.theme-btn,
+a.theme-btn,
+button.theme-btn:hover,
+button.theme-btn:focus,
+a.theme-btn:hover,
+a.theme-btn:focus {
+    background: #0084ff;
+    border-color: #0084ff;
+    color: #ffffff;
+}
+
+/*-------------Default Color Option--------------*/
+
+body .theme-bg {
+    background: #0084ff !important;
+}
+
+body .theme-color {
+    color: #0084ff !important;
+}
+
+body .hover-theme-bg:hover,
+body .theme-bg:focus {
+    background: #0084ff !important;
+}
+
+body .hover-theme-color:hover,
+body .theme-color:focus {
+    color: #0084ff !important;
+}
+
+body .navbar-default.sidebar.left-side-bg {
+    background: #ffffff;
+}
+
+body .card-bg {
+    background: #ffffff;
+    border-color: #e8eef1;
+}
+
+body .sidebar-nav.navbar-collapse .nav > li.active > a {
+    background: rgb(242, 245, 247);
+    border-left: 4px solid #FF9800;
+    color: #000000;
+}
+
+body .sidebar-nav.navbar-collapse .nav > li > a:hover,
+body .sidebar-nav.navbar-collapse .nav > li > a:focus {
+    background: rgb(242, 245, 247);
+    border-left: 4px solid #FF9800;
+    color: #000000;
+}
+
+body .navbar-top-links li ul li.external {
+    background: #ffffff;
+}
+
+body .dropdown-menu > li > a {
+    color: #67757c;
+    border-bottom: 1px solid #f1f6f9;
+}
+
+body .open > .dropdown-toggle.btn-default {
+    color: #99abb4;
+}
+
+body .navbar-top-links a.dropdown-toggle,
+body .navbar-top-links a.dropdown-toggle:hover,
+body .navbar-top-links a.dropdown-toggle:focus {
+    color: #0c0a0b;
+}
+
+body .sidebar-nav.navbar-collapse .nav > li > a {
+    background: #ffffff;
+    border-left: 4px solid #ffffff;
+    color: #607d8b;
+}
+
+body .dropdown-menu > li > a:focus,
+body .dropdown-menu > li > a:hover {
+    color: #67757c;
+    background-color: #f4f8fb;
+}
+
+body .footer-bg {
+    background: #ffffff;
+    border-top: 1px solid #e8eef1;
+}
+
+body .footer-cl {
+    color: #0084ff;
+}
+
+.navbar-header {
+    background: #ff9800;
+}
+
+.navbar-default .navbar-brand {
+    color: #ffffff;
+}
+
+
+/*-----services------*/
+
+.service-box:after {
+    border-bottom: 1px solid #0084ff;
+    border-top: 1px solid #0084ff;
+}
+
+.service-box:before {
+    border-left: 1px solid #0084ff;
+    border-right: 1px solid #0084ff;
+}
+
+.service-box .service-content h3 a:hover {
+    color: #636363;
+}
+
+.service-box .read a:hover,
+.service-box:hover .service-icon i {
+    color: #0084ff;
+    border-color: #181818;
+}
+
+.service-box:hover .service-icon i,
+.service-box:hover .service-content h3 a {
+    color: #0084ff;
+}
+
+/*------Team Style-------*/
+
+.my-team .team-prof a:hover {
+    color: #0084ff;
+}
+
+.my-team .team-prof small {
+    color: #0084ff;
+}
+
+.my-team .social-link li a {
+    background: #0084ff;
+}
+
+.my-team .social-link li a:hover {
+    background: #455a64;
+}
+
+/*---------Tab color--------*/
+
+.tab .nav-tabs li.active a,
+.tab .nav-tabs li.active a:hover {
+    border-top: 3px solid #0084ff;
+}
+
+.bread-tab .nav-tabs li.active a:before {
+    border-left: 17px solid #0084ff;
+}
+
+.bread-tab .nav-tabs li.active > a,
+.bread-tab .nav-tabs > li.active > a:focus,
+.bread-tab .nav-tabs > li.active > a:hover {
+    background: #0084ff;
+}
+
+.simple-tab li.active {
+    border-top: 3px solid #0084ff;
+}
+
+.simple-tab li.active a,
+.simple-tab li.active a:hover,
+.simple-tab li.active a:focus {
+    background: #0084ff;
+}
+
+.simple-tab li a:hover {
+    background: #0084ff;
+    border-right: 1px solid #0084ff;
+}
+
+.advance-tab .nav-tabs > li.active > a,
+.advance-tab .nav-tabs > li.active > a:focus,
+.advance-tab .nav-tabs > li.active > a:hover {
+    background: #0084ff;
+}
+
+.advance-tab .nav-tabs li.active:after {
+    border-top-color: #0084ff;
+}
+
+.advance-tab .tab-content {
+    border: 1px solid #e8edef;
+    border-top: 3px solid #0084ff;
+}
+
+/*-------Accordion-------*/
+
+#accordion .panel-title a {
+    color: #0084ff;
+    border-left: 3px solid #0084ff;
+}
+
+#accordion .panel-title a.collapsed {
+    color: #0084ff;
+}
+
+#accordion .panel-title a:before,
+#accordion .panel-title a.collapsed:before {
+    color: #0084ff;
+}
+
+#accordion .panel-title a:hover,
+#accordion .panel-title a.collapsed:hover,
+#accordion .panel-title a:before,
+#accordion .panel-title a:hover:before {
+    color: #0084ff;
+}
+
+#simple-accordion .panel-heading > .panel-title > a {
+    background: #0084ff;
+}
+
+#simple-accordion .panel-title > a.collapsed:hover {
+    color: #0084ff;
+}
+
+#advance-accordion .panel-title a:before,
+#advance-accordion .panel-title a.collapsed:before {
+    background: #0084ff;
+}
+
+#advance-accordion .panel-title a.collapsed:before {
+    background: #fff;
+}
+
+#simple-accordion .panel-title > a.collapsed {
+    background: transparent;
+    color: #3b4556;
+}
+
+#excellent-accordion .panel-title a {
+    background: #0084ff;
+}
+
+/*---ecommerce---*/
+
+.card.hover-product .btn.btn-pro {
+    border: 1px solid #0084ff;
+    color: #0084ff;
+}
+
+.card.hover-product .btn.btn-pro:hover,
+.card.hover-product .btn.btn-pro:focus {
+    background: #0084ff;
+}
+
+
+/*----Price Table------*/
+
+.first-style.price-table:hover .price-value {
+    background: #0084ff;
+}
+
+.first-style.price-table:hover .price-value {
+    background: #0084ff;
+}
+
+.first-style.price-table:hover .price-value:before {
+    border-color: transparent #1f7bd2 #1f7bd2 transparent;
+}
+
+.first-style.price-table:hover .price-value:after {
+    border-color: transparent transparent #1f7bd2 #1f7bd2;
+}
+
+.first-style.price-table:hover .price-table-signup {
+    background: #0084ff;
+}
+
+.advance-pr-table.pricing-table .pricing-table-signup:hover {
+    border: 1px solid #0084ff;
+    background: #0084ff;
+}
+
+.active-pr-table.advance-pr-table.pricing-table .heading:after {
+    border-color: #0084ff rgba(0, 0, 0, 0) rgba(0, 0, 0, 0);
+}
+
+.active-pr-table.advance-pr-table.pricing-table .pricing-table-header {
+    background: #0084ff;
+}
+
+.active-pr-table.advance-pr-table.pricing-table .pricing-table-header:before {
+    border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) #0084ff;
+}
+
+.active-pr-table.advance-pr-table.pricing-table .pricing-table-header:after {
+    border-color: rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) rgba(0, 0, 0, 0) #0084ff;
+}
+
+.active-pr.style-two.pricing-table .pricing-table-header > .price-value {
+    background: #0084ff;
+    box-shadow: 0 0 0 2px #0084ff;
+}
+
+.style-two.pricing-table .pricing-table-sign-up > .btn-block:hover {
+    background: #0084ff;
+    border-color: #0084ff;
+}
+
+.active-pr.style-two.pricing-table .pricing-table-sign-up > .btn-block {
+    border: 1px solid #0084ff;
+    background: #0084ff;
+}
+
+@media (min-width: 768px) {
+    nav.navbar.navbar-default.navbar-static-top {
+        background: #ffffff;
+        border-color: #e8edef;
+    }
+}

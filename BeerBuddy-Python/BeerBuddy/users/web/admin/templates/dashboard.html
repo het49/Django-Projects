@@ -1,0 +1,193 @@
+{% include "users/web/admin/common/header.html" %}
+{% load static %}
+{% get_static_prefix as STATIC %}
+{% include "users/web/admin/common/menu.html" %}
+<title>BeerBuddy:Dashboard</title>
+<div id="page-wrapper">
+    <div class="row page-titles">
+        <div class="col-md-5 align-self-center">
+            <h3 class="text-themecolor">Dashboard </h3>
+        </div>
+        <div class="col-md-7 align-self-center">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                <li class="breadcrumb-item active">Dashboard</li>
+            </ol>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3 col-sm-6">
+                <div class="widget smart-standard-widget">
+                    <div class="row">
+                        <div class="widget-caption info">
+                            <div class="col-xs-4 no-pad">
+                                <i class="icon fa fa-users"></i>
+                            </div>
+                            <div class="col-xs-8 no-pad">
+                                <div class="widget-detail">
+                                    <h3 class="cl-info">{{total_user}}</h3>
+                                    <span>Total Users</span>
+                                </div>
+                            </div>
+                            <div class="col-xs-12">
+                                <div class="widget-line bg-info">
+                                    <span style="width:{{total_user_percentage}}%;"
+                                          class="bg-info widget-horigental-line"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="widget smart-standard-widget">
+                    <div class="row">
+                        <div class="widget-caption success">
+                            <div class="col-xs-4 no-pad">
+                                <i class="icon fa fa-line-chart"></i>
+                            </div>
+                            <div class="col-xs-8 no-pad">
+                                <div class="widget-detail">
+                                    <h3 class="cl-success">{{new_user}}</h3>
+                                    <span>New Users</span>
+                                </div>
+                            </div>
+                            <div class="col-xs-12">
+                                <div class="widget-line bg-success">
+                                    <span style="width:{{total_percentage_newuser}}%;"
+                                          class="bg-danger widget-horigental-line"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="widget smart-standard-widget">
+                    <div class="row">
+                        <div class="widget-caption warning">
+                            <div class="col-xs-4 no-pad">
+                                <i class="icon fa fa-sign-in"></i>
+                            </div>
+                            <div class="col-xs-8 no-pad">
+                                <div class="widget-detail">
+                                    <h3 class="cl-warning">{{total_checkin_user}}</h3>
+                                    <span>Check Ins</span>
+                                </div>
+                            </div>
+                            <div class="col-xs-12">
+                                <div class="widget-line bg-warning">
+                                    <span style="width:{{total_checkin_percentage}}%;"
+                                          class="bg-warning widget-horigental-line"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="widget smart-standard-widget">
+                    <div class="row">
+                        <div class="widget-caption danger">
+                            <div class="col-xs-4 no-pad">
+                                <i class="icon fa fa-user-plus"></i>
+                            </div>
+                            <div class="col-xs-8 no-pad">
+                                <div class="widget-detail">
+                                    <h3 class="cl-danger">{{total_deactive_user}}</h3>
+                                    <span>Deactive Users</span>
+                                </div>
+                            </div>
+                            <div class="col-xs-12">
+                                <div class="widget-line bg-danger">
+                                    <span style="width:{{total_deactive_percentage}}%;"
+                                          class="bg-success widget-horigental-line"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /row -->
+        <div class="row">
+            <div class="col-md-6 col-sm-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="pull-right">
+                            <div class="btn-group">
+                                <a href="?type=weekly" class="btn btn-default {% if request.GET.type == 'weekly' %} active {% endif %}">Weekly</a>
+                                <a href="?type=monthly" class="btn btn-default  {% if request.GET.type == 'monthly' %} active {% endif %} ">Monthly</a>
+                                <a href="?type=yearly" class="btn btn-default  {% if request.GET.type == 'yearly' %} active {% endif %} ">Yearly</a>
+                            </div>
+                        </div>
+                        <h4 class="card-title m-b-0">Total User</h4>
+                    </div>
+                    <div class="card-body">
+                        <div id="container1"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div id="container" data-url="{% url 'users-web:chart-data' %}"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% include "users/web/admin/common/footer.html" %}
+
+
+<script>
+    Highcharts.chart('container1', {
+        chart: {
+            type: 'column'
+        },
+
+    title: {
+        text: ''
+    },
+
+        xAxis: {
+            categories:{{categories|safe}}
+        },
+         yAxis: {
+        title: {
+            text: ''
+        }
+        },
+        series: [{
+            name: 'users',
+             data:{{ user_series }},
+
+          color: 'green'
+
+
+        },  ]
+    });
+         $(document).ready(function(){
+    $(".highcharts-credits").hide();
+
+});
+
+
+</script>
+<script>
+      $(document).ready(function(){
+         $.ajax({
+          url: $("#container").attr("data-url"),
+          dataType: 'json',
+          success: function (data) {
+            Highcharts.chart("container", data);
+          }
+        });
+    });
+
+
+
+</script>
+

@@ -1,0 +1,213 @@
+{% load static %}
+{% get_static_prefix as STATIC %}
+<!DOCTYPE html>
+<html lang="en" class="h-100">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <title>
+   Beer Buddy
+  </title>
+  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+  <!--     Fonts and icons     -->
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+  <!-- CSS Files -->
+  <link href="{{STATIC}}assets/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="{{STATIC}}assets/css/now-ui-dashboard.css?v=1.5.0" rel="stylesheet" />
+  <!-- CSS Just for demo purpose, don't include it in your project -->
+  <link href="{{STATIC}}assets/demo/demo.css" rel="stylesheet" />
+  <style>
+  body.user-profile {
+    background-image: url({{STATIC}}assets/img/beerGlass.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+  }
+  .card {
+    background-color: rgba(0,0,0, 0.4);
+    border-radius: 15px;
+  }
+  .card label {
+    color: #FFFFFF !important;
+    font-weight : 600;
+  }
+  .form-control.loginInput {
+    padding: 10px 18px 10px 18px !important;
+    color: #fff!important;
+    border: 1px solid transparent !important;
+    background: rgba(255,255,255,.08) !important;
+    min-height: 50px;
+    font-size: 15px;
+  }
+  .titleSub {
+    text-transform: capitalize !important;
+    font-weight : 500 !important;
+  }
+  .form-control.loginInput::-webkit-input-placeholder { /* Edge */
+    color: #ffffff;
+    font-size: 15px;
+  }
+
+  .form-control.loginInput:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: #ffffff;
+    font-size: 15px;
+  }
+
+  .form-control.loginInput::placeholder {
+    color: #ffffff;
+    font-size: 15px;
+  }
+  .form-control.loginInput:focus {
+        border-color: rgba(255,255,255,.4) !important;
+  }
+  .btn.btn-primary {
+    background: #fbceb5!important;
+    border: 1px solid #fbceb5!important;
+    color: #000!important;
+    min-height: 50px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+</style>
+</head>
+
+<body class="user-profile h-100">
+  <div class="h-100">
+    <div class="container h-100" id="">
+      <!-- End Navbar -->
+      <div class="content h-100">
+        <div class="row justify-content-center h-100">
+          <div class="col-md-4 col-12 align-self-center">
+            <div class="card">
+              <div class="card-header">
+                <h5 class="title text-white text-center">Login</h5>
+                <h6 class="titleSub text-white text-center">Have an account?</h6>
+              </div>
+              <div class="card-body">
+                <form method="POST" action="">
+                  {% csrf_token %}
+                  
+                  <!-- <div class="row">
+                    <div class="col-md-5 pr-1">
+                      <div class="form-group mb-3">
+                        <label>Company (disabled)</label>
+                        <input type="text" class="form-control" disabled="" placeholder="Company" value="Creative Code Inc.">
+                      </div>
+                    </div>
+                    <div class="col-md-3 px-1 mb-3">
+                      <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" class="form-control" placeholder="Username" value="michael23">
+                      </div>
+                    </div>
+                    <div class="col-md-4 pl-1 mb-3">
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Email address</label>
+                        <input type="email" class="form-control" placeholder="Email">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 pr-1 mb-3">
+                      <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" class="form-control" placeholder="Company" value="Mike">
+                      </div>
+                    </div>
+                    <div class="col-md-6 pl-1 mb-3">
+                      <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" class="form-control" placeholder="Last Name" value="Andrew">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12 mb-3">
+                      <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" class="form-control" placeholder="Home Address" value="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4 pr-1 mb-3">
+                      <div class="form-group">
+                        <label>City</label>
+                        <input type="text" class="form-control" placeholder="City" value="Mike">
+                      </div>
+                    </div>
+                    <div class="col-md-4 px-1 mb-3">
+                      <div class="form-group">
+                        <label>Country</label>
+                        <input type="text" class="form-control" placeholder="Country" value="Andrew">
+                      </div>
+                    </div>
+                    <div class="col-md-4 pl-1 mb-3">
+                      <div class="form-group">
+                        <label>Postal Code</label>
+                        <input type="number" class="form-control" placeholder="ZIP Code">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12 mb-3">
+                      <div class="form-group">
+                        <label>About Me</label>
+                        <textarea rows="4" cols="80" class="form-control" placeholder="Here can be your description" value="Mike">Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo.</textarea>
+                      </div>
+                    </div>
+                  </div> -->
+                  <div class="row">
+                    <div class="col-md-12 mb-3">
+                      <div class="form-group">
+                        <!-- <label for="exampleInputEmail1">Email address</label> -->
+                        <input type="email" name="email" class="form-control loginInput" placeholder="Email" required="">
+                      </div>
+                    </div>
+                    <div class="col-md-12 mb-0">
+                      <div class="form-group mb-0">
+                        <!-- <label for="exampleInputEmail1">Email address</label> -->
+                        <input type="password" name="password" class="form-control loginInput" placeholder="Password" required>
+                      </div>
+                    </div>`
+                  </div>
+                  <div class="form-group mb-0">
+                      <button type="submit" class="form-control btn btn-primary submit px-3">Sign In
+                      </button>
+                  </div>
+                  <div class="form-group mb-0">
+                    <div class="text-center">
+                      <a href="/web/brewery/changepassword/" style="color: #fff">Forgot Password</a>
+                    </div>
+                    {{msg}}
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+      
+        </div>
+      </div>
+      </div>
+  </div>
+  <!--   Core JS Files   -->
+  <script src="{{STATIC}}assets/js/core/jquery.min.js"></script>
+  <script src="{{STATIC}}assets/js/core/popper.min.js"></script>
+  <script src="{{STATIC}}assets/js/core/bootstrap.min.js"></script>
+  <script src="{{STATIC}}assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+  <!--  Google Maps Plugin    -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+  <!-- Chart JS -->
+  <script src="{{STATIC}}assets/js/plugins/chartjs.min.js"></script>
+  <!--  Notifications Plugin    -->
+  <script src="{{STATIC}}assets/js/plugins/bootstrap-notify.js"></script>
+  <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
+  <script src="{{STATIC}}assets/js/now-ui-dashboard.min.js?v=1.5.0" type="text/javascript"></script><!-- Now Ui Dashboard DEMO methods, don't include it in your project! -->
+  <script src="{{STATIC}}assets/demo/demo.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,341 @@
+{% include "users/web/admin/common/header.html" %}
+{% load static %}
+{% get_static_prefix as STATIC %}
+{% include 'users/web/admin/common/menu.html' %}
+<title>BeerBuddy:Profile</title>
+<div style="text-align: center;">
+    {% if is_message == 1 %}
+    <div class="alert alert-success">
+        {{message}}
+    </div>
+    {% elif is_message == 0 %}
+    <div class="alert alert-danger">
+        {{message}}
+    </div>
+    {% else %}
+
+    {% endif %}
+
+</div>
+<div class="row page-titles">
+    <div class="col-md-5 align-self-center">
+
+        <h3 class="text-themecolor">Profile</h3>
+    </div>
+    <div class="col-md-7 align-self-center">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/web/users/dashboard">Home</a></li>
+            <li class="breadcrumb-item active">Profile</li>
+        </ol>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8 col-lg-6">
+            <!-- Profile Image -->
+            <div class="box box-primary">
+                <div class="box-body box-profile" style="padding-bottom: 3rem;">
+                    <div class="row">
+                        <div class="col-md-4">
+                            {% if login_user.profile_img %}
+                            <img src="{{login_user.profile_img.url}}" alt="Avatar" height="150" width="150">
+                            {% else %}
+                            <img src="{% static 'assets/img/default-profile.png' %}" alt="Default" height="150"
+                                 width="150">
+                            {% endif %}
+
+                        </div>
+                        <div class="col-md-8">
+                            <h3 class="profile-username" style="margin-bottom: 10px;"><b>{{login_user.username}}</b>
+                            </h3>
+                            <p class="text-muted"><span class="fa fa-user">&nbsp;&nbsp;&nbsp;</span>{{login_user.first_name}}&nbsp;{{login_user.last_name}}
+                            </p>
+
+                            <p class="text-muted"><span class="fa fa-envelope">&nbsp;&nbsp;&nbsp;</span>{{login_user.email}}
+                            </p>
+                            <p class="text-muted"><span class="fa fa-phone-square">&nbsp;&nbsp;&nbsp;</span>{% if login_user.alternate_no %}{{login_user.phone_no}}{% else %}{% endif %}</p>
+                            <p class="text-muted"><span class="fa fa-phone-square">&nbsp;&nbsp;&nbsp;</span>{% if login_user.alternate_no %}{{login_user.alternate_no}}{% else %}{% endif %}</p>
+                            <p class="text-muted"><i class="fa fa-birthday-cake"></i>&nbsp;&nbsp;{{login_user.dob|date:'Y-m-d'}}
+                            </p>
+                            <p class="text-muted"><span class="fa fa-user">&nbsp;&nbsp;&nbsp;</span>{{login_user.gender}}
+                            </p>
+                            <p class="text-muted"><span class="fa fa-home">&nbsp;&nbsp;&nbsp;</span>{% if login_user.city %}{{login_user.city}}{% else %}{% endif %} {% if login_user.state %}{{login_user.state}}{% else %}{% endif %}<br>{% if login_user.country %}{{login_user.country}}{% else %}{% endif %}
+
+                            </p>
+
+                            <a href="javascript:void(0);" class="btn btn-primary" id="edit"><b>Edit</b></a>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+            <div class="box box-primary hidden" id="profile">
+                <div class="box-header with-border">
+
+                    <h3 class="box-title">Edit Profile</h3>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="tab-pane active" id="settings">
+                        <form method="post" action="" id="formID" enctype="multipart/form-data" class="form-horizontal">
+                            {% csrf_token %}
+                            <div class="form-group" style="width:100%;">
+                                <label for="username" class="col-sm-2 control-label">UserName<span
+                                        class="error">*</span></label>
+
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="username" readonly
+                                           value="{{login_user.username}}" placeholder="User Name">
+                                </div>
+                            </div>
+                            <div class="form-group" style="width:100%;">
+                                <label for="first_name" class="col-sm-2 control-label">First&nbsp;Name<span
+                                        class="error">*</span></label>
+
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="first_name"
+                                           value="{{login_user.first_name}}" placeholder="First Name">
+                                </div>
+                            </div>
+                            <div class="form-group" style="width:100%;">
+                                <label for="last_name" class="col-sm-2 control-label">Last&nbsp;Name<span class="error">*</span></label>
+
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="last_name"
+                                           value="{{login_user.last_name}}" placeholder="Last Name">
+                                </div>
+                            </div>
+                            <div class="form-group" style="width:100%;">
+                                <label for="email" class="col-sm-2 control-label">Email <span
+                                        class="error">*</span></label>
+
+                                <div class="col-sm-10">
+                                    <input type="email" class="form-control" name="email"
+                                           value="{{login_user.email}}" placeholder="Email">
+                                </div>
+                            </div>
+                            <div class="form-group" style="width:100%;">
+                                <label for="phone_no" class="col-sm-2 control-label">Phone <span class="error">*</span></label>
+
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="phone_no"
+                                           value="{% if login_user.phone_no %}{{login_user.phone_no}}{% else %}{% endif %}" placeholder="Phone Number">
+                                </div>
+                            </div>
+                            <div class="form-group" style="width:100%;">
+                                <label for="alternate_no" class="col-sm-2 control-label">Alternate_no</label>
+
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="alternate_no"
+                                           value="{% if login_user.alternate_no %}{{login_user.alternate_no}}{% else %}{% endif %}" placeholder="Alternate Number">
+                                </div>
+                            </div>
+                            <div class="form-group" style="width:100%;">
+                                <label for="dob" class="col-sm-2 control-label">DOB <span class="error">*</span></label>
+
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="dob" id="datepicker"
+                                           autocomplete="off" value="{{login_user.dob|date:'Y-m-d'}}"
+                                           required="required" placeholder="Date of Birth">
+                                </div>
+                            </div>
+                            <div class="form-group" style="width:100%;">
+                                <label for="gender" class="col-sm-2 control-label">Gender <span
+                                        class="error">*</span></label>
+
+                                <div class="col-sm-10">
+                                    <select name="gender" class="form-control">
+                                        <option value="">Select Gender</option>
+                                        <option value="Male" {% if login_user.gender == "Male" %} selected {% endif %} >Male</option>
+                                        <option value="Female" {% if login_user.gender == "Female" %} selected {% endif %}>Female</option>
+                                        <option value="other" {% if login_user.gender == "other" %} selected {% endif %}>Other </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="width:100%;">
+                                <label for="city" class="col-sm-2 control-label">City</label>
+
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="city" value="{% if login_user.city %}{{login_user.city}}{% else %}{% endif %}"
+                                           placeholder="City">
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="width:100%;">
+                                <label for="state" class="col-sm-2 control-label">State</label>
+
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="state" value="{% if login_user.state %}{{login_user.state}}{% else %}{% endif %}"
+                                           placeholder="State">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group" style="width:100%;">
+                                <label for="country" class="col-sm-2 control-label">Country&nbsp;<span
+                                        class="error">*</span></label>
+                                <div class="col-sm-10">
+                                    <select name="country" class="form-control">
+                                        <option value=""> Select country</option>
+                                        {% for country in countries %}
+                                        {% if login_user.country.id == country.id %}
+                                        <option value="{{country.id}}" selected>{{country.country_name}}</option>
+                                        {% else %}
+                                        <option value="{{country.id}}">{{country.country_name}}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-group" style="width:100%;">
+                                <label for="inputSkills" class="col-sm-2 control-label">Photo</label>
+
+                                <div class="col-sm-10">
+                                    <input type="file" class="form-control" name="profile_img"><br><br>
+                                    {% if login_user.profile_img %}
+                                    <img src="{{login_user.profile_img.url}}" alt="Avatar" height="70" width="70">
+                                    {% else %}
+                                    <img src="{% static 'assets/img/default-profile.png' %}" alt="Default" height="70"
+                                         width="70">
+                                    {% endif %}
+                                </div>
+                                <div class="form-group" style="width:100%;">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <div class="checkbox">
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group" style="width:100%;">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <button type="submit" class="btn btn-success">Submit</button>
+                                        <a id="cancel" href="/web/users/profile/" class="btn btn-danger">Cancel</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include "users/web/admin/common/footer.html" %}
+
+<script>
+
+
+jQuery.validator.addMethod("mobile", function(value, element) {
+return value.match(/[0-9]{9}/);
+}, "No space please and don't leave it empty");
+jQuery.validator.addMethod("Fname", function(value, element) {
+return value.match(/[a-zA-Z]/);
+},"Please enter characters only");
+jQuery.validator.addMethod("Lname", function(value, element) {
+return value.match(/[a-zA-Z]/);
+},"Please enter characters only");
+
+
+
+
+$("#formID").validate({
+rules: {
+
+first_name: {
+required:true,
+Fname:true,
+maxlength: 15,
+minlength:2,
+},
+
+last_name: {
+required:true,
+Lname:true,
+maxlength: 15,
+minlength:2,
+},
+
+
+
+phone_no: {
+required:true,
+mobile:true,
+maxlength: 12,
+minlength:10,
+digits:true,
+},
+
+dob: {
+required:true,
+},
+
+gender: {
+required:true,
+},
+
+
+country: {
+required:true,
+},
+
+
+
+},
+messages: {
+
+
+
+phone_no:{
+required:"Please Enter Mobile Number",
+mobile:"Please enter digits only",
+maxlength:"Maximum 15 digits",
+minlength:"Minimum 10 digits",
+digits:"Please enter digits only",
+
+},
+first_name:{
+required:"Please Enter Your First Name",
+Fname:"Please Enter Alphanumeric Only",
+maxlength:"Maximum 15 ",
+minlength:"Minimum 2 ",
+},
+last_name:{
+required:"Please Enter Your Last Name",
+Lname:"Please Enter Alphanumeric Only",
+maxlength:"Maximum 15 ",
+minlength:"Minimum 2 ",
+},
+gender: {
+required:"Select Your Gender",
+},
+
+country:{
+required:"Select Your Country",
+},
+
+
+
+
+
+
+
+}
+});
+
+</script>
+
+<script>
+        $("#edit").click(function() {
+            $("#profile").removeClass("hidden");
+        });
+        $("#cancel").click(function() {
+            $("#profile").addClass("hidden");
+        });
+
+</script>

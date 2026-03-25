@@ -1,0 +1,394 @@
+{% include "users/web/admin/common/header.html" %}
+{% load static %}
+{% get_static_prefix as STATIC %}
+{% include "users/web/admin/common/menu.html" %}
+
+<title>BeerBuddy:Brewery Management</title>
+<div class="row page-titles">
+    <div class="col-md-5 align-self-center">
+        <!-- <h3 class="text-themecolor">Brewery Management</h3> -->
+    </div>
+    <div class="col-md-7 align-self-center">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><!--<a href="/web/users/dashboard">-->Home</a></li>
+            <li class="breadcrumb-item active">Brewery Management</li>
+        </ol>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel card">
+                <div class="x_content  table-wrapper">
+                    <div class="table-title theme-bg">
+                        <div class="row">
+                            <div class="col-md-12 text-center pb-2">
+                                <h2>
+                                    Brewery Management
+                                </h2>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="datatable" class="table customTable table-striped table-hover table-sm">
+                                <thead>
+                                <tr>
+                                    <th><b>S.No.</b></th>
+                                    <th><b>Profile&nbspPic</b></th>
+                                    <th><b>Name</b></th>
+                                    <th><b>Email&nbspID</b></th>
+                                    <th><b>Phone&nbspNo</b></th>
+                                    <th><b>DOB</b></th>
+                                    <th><b>Gender</b></th>
+                                    <th><b>CITY</b></th>
+                                    <th><b>STATE</b></th>
+                                    <th><b>Country</b></th>
+                                    <th><b>Friend&nbspList</b></th>
+                                    <th><b>Favourites</b></th>
+                                    <th><b>Action</b></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for user in user_list %}
+                                <tr>
+                                    <td>
+                                        <div class="a">{{ forloop.counter }}</div>
+                                    </td>
+                                    <td>
+                                        {% if user.profile_img %}
+                                        <img src="{{user.profile_img.url}}" alt="Avatar" height="50" width="50">
+                                        {% else %}
+                                        <img src="{% static 'assets/img/default-profile.png' %}" alt="Default"
+                                             height="50" width="50">
+                                        {% endif %}
+
+                                    </td>
+
+                                    <td>{{user.get_full_name}}</td>
+                                    <td>{{user.email}}</td>
+                                    <td>{% if user.brewery_phone %}{{user.brewery_phone}}{% else %}{% endif %}</td>
+                                    <td>{% if user.dob %}{{user.dob}}{% else %}{% endif %}</td>
+                                    <td>{{user.gender}}</td>
+                                    <td>{% if user.city %}{{user.city}}{% else %}{% endif %}</td>
+                                    <td>{% if user.state %}{{user.state}}{% else %}{% endif %}</td>
+                                    <td>{% if user.country %}{{user.country}}{% else %}{% endif %}</td>
+
+                                    <td><a href="javascript:void(0);" class="text-primary"
+                                           onclick="return friendlist({{user.id}}); "><b>See Lists</b></a></td>
+                                    <td><a href="javascript:void(0);" class="text-primary"
+                                           onclick="return userfavourites({{user.id}}); "><b>See Lists</b></a></td>
+                                    <td>
+                                        <div class="d-flex">
+                                            <style>
+            .fa.green{color:#048c47;}
+            .fa.red{color:#f00;}
+
+                                            </style>
+                                            <div class="status-btn">
+                                                {% if user.is_active == True %}
+                                                <a href="javascript:void(0);"
+                                                   onclick="return changeuserstatus({{user.id}}); "><i
+                                                        class="fa fa-toggle-on green status{{user.id}}"
+                                                        title="Active"></i></a>
+                                                {% else %}
+                                                <a href="javascript:void(0);"
+                                                   onclick="return changeuserstatus({{user.id}}); "><i
+                                                        class="fa fa-toggle-off red status{{user.id}}"
+                                                        title="Inactive"></i></a>
+                                                {% endif %}
+
+
+                                            </div>
+                                            <div>
+                                                <a href="javascript:void(0);" onclick="return userdetails({{user.id}});"
+                                                   data-toggle="modal">
+                                                    <i class="fa fa-eye" aria-hidden="true"></i></a>
+                                            </div>
+                                            <div>
+
+                                                <a href="/web/users/delete/{{user.id}}" class="delete" data-toggle="modal"><i class="fa fa-trash" data-toggle="tooltip" title="Delete"></i></a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal HTML -->
+
+<div id="viewUserModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header theme-bg">
+                <h4 class="modal-title">View Detail</h4>
+            </div>
+            <div class="modal-body row">
+                <div class="form-group col-sm-12 col-md-6">
+                    <label>Username</label>
+                    <input type="text" class="form-control form-control-sm" id="usernameid" value="" readonly>
+                </div>
+                <div class="form-group col-sm-12 col-md-6">
+                    <label>Email Id</label>
+                    <input type="email" class="form-control form-control-sm" id="emailid" value="" disabled>
+                </div>
+                <div class="form-group col-sm-12 col-md-6">
+                    <label>Contact No</label>
+                    <input type="text" class="form-control form-control-sm" id="phonenoid" value="" disabled>
+                </div>
+                <div class="form-group col-sm-12 col-md-6">
+                    <label>DOB</label>
+                    <input type="text" class="form-control form-control-sm" id="dobid" value="" disabled>
+                </div>
+                <div class="form-group col-sm-12 col-md-6">
+                    <label>Gender</label>
+                    <input type="text" class="form-control form-control-sm" id="genderid" value="" disabled>
+                </div>
+                <div class="form-group col-sm-12 col-md-6">
+                    <label>Address</label>
+                    <input type="text" class="form-control form-control-sm" id="cityid" value="" disabled>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-default" data-dismiss="modal" value="Close">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="userFavouritesModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header theme-bg">
+                <h4 class="modal-title">Favourites</h4>
+            </div>
+            <div class="modal-body row">
+                <div class="x_panel">
+                    <div class="x_content">
+                        <div class="table-responsive">
+                            <span id="appenddata1"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-default" data-dismiss="modal" value="Close">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="buddyListModal" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header theme-bg">
+                <h4 class="modal-title">Connection</h4>
+            </div>
+            <div class="modal-body row">
+                <div class="x_panel">
+                    <div class="x_content">
+                        <div class="table-responsive">
+                            <span id="appenddata"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-default" data-dismiss="modal" value="Close">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% include "users/web/admin/common/footer.html" %}
+<script>
+
+function changeuserstatus(obj){
+      var id = obj;
+      $.ajax({
+        type: 'POST',
+        url:  '/web/users/changeuserstatus/',
+        data:  {'id': id,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        success: function (response) {
+            if(response.result == true){
+                $('.status'+id).removeClass('fa fa-toggle-off red');
+                $('.status'+id).addClass('fa fa-toggle-on green');
+                $('#msg').html('<div class="alert alert-success"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> User successfully enabled.</div>')
+            } else if(response.result == false) {
+                $('.status'+id).removeClass('fa fa-toggle-on green');
+                $('.status'+id).addClass('fa fa-toggle-off red');
+               $('#msg').html('<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Danger!</strong> User successfully disabled.</div>')
+               } else {
+                $('#msg').html('<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Danger!</strong> Something went wrong please try again.</div>')
+            }
+        }
+      });
+
+    }
+
+
+</script>
+
+
+<script>
+function userdetails(id){
+
+      $.ajax({
+        type: 'POST',
+        url:  '/web/users/userdetails/',
+        data:  {'id': id,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        success: function (response) {
+        if(response.status=='success'){
+          ;
+            $('#usernameid').val(response.result.username);
+            $('#emailid').val(response.result.email);
+            $('#phonenoid').val(response.result.phone_no);
+            $('#dobid').val(response.result.dob);
+            $('#genderid').val(response.result.gender);
+            if(response.result.state!=undefined){
+            $('#cityid').val(response.result.city+','+response.result.state);
+            } else {
+            $('#cityid').val(response.result.city);
+            }
+            $('#viewUserModal').modal('show');
+        } else if(response.status == 'error'){
+         return false;
+        }
+
+        }
+      });
+
+    }
+
+
+</script>
+
+
+<script>
+function userfavourites(id){
+      $.ajax({
+        type: 'POST',
+        url:  '/web/beershops/userfavourites/',
+        data:  {'id': id,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        success: function (response) {
+        if(response.status=='success'){
+            var obj = response.result;
+            var html = "";
+            html += "<table class=\"table table-striped jambo_table bulk_action\">";
+            html += " <thead>";
+            html += "<tr class=\"headings\">";
+            html += "<th class=\"column-title\"><b>Beer Shop</b></th>";
+            html += "</tr>";
+            html += "</thead>";
+            for (let i = 0; i < obj.length; i++) {
+                html += "<tbody>";
+                html += "<tr>";
+                html += "<td>"+obj[i].beer_shop.name+"</td>";
+                html += "</tr>";
+                html += "</tbody>";
+            }
+            html += " </table>";
+            $('#appenddata1').html(html);
+           $('#userFavouritesModal').modal('show');
+        } else if(response.status == 'error'){
+            var obj = response.result;
+            var html = "";
+            html += "<table class=\"table table-striped jambo_table bulk_action\">";
+            html += " <thead>";
+            html += "<tr class=\"headings\">";
+            html += "<th class=\"column-title\"><b>Beer Shop</b></th>";
+            html += "</tr>";
+             html += "<tr>";
+            html += "<td colspan='4' class='text-center'>No Data Found</td>";
+            html += "</tr>";
+            html += "</thead>";
+            html += " </table>";
+            $('#appenddata1').html(html);
+            $('#userFavouritesModal').modal('show');
+        }
+
+        }
+      });
+
+    }
+
+
+</script>
+
+
+<script>
+function friendlist(id){
+      $.ajax({
+
+        type: 'POST',
+        url:  '/web/users/friend_list/',
+        data:  {'id': id,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        success: function (response) {
+        if(response.status=='success'){
+            var obj = response.result;
+            var html = "";
+            html += "<table class=\"table table-striped jambo_table bulk_action\">";
+            html += " <thead>";
+            html += "<tr class=\"headings\">";
+            html += "<th class=\"column-title\"><b>Name</></th>";
+            html += "<th class=\"column-title\"><b>Number</b></th>";
+            html += "</tr>";
+            html += "</thead>";
+            for (let i = 0; i < obj.length; i++) {
+                html += "<tbody>";
+                html += "<tr>";
+                html += "<td>"+obj[i].friend_name+"</td>";
+                html += "<td>"+obj[i].friend_number+"</td>";
+                html += "</tr>";
+                html += "</tbody>";
+            }
+            html += " </table>";
+            $('#appenddata').html(html);
+           $('#buddyListModal').modal('show');
+        } else if(response.status == 'error'){
+         var obj = response.result;
+            var html = "";
+            html += "<table class=\"table table-striped jambo_table bulk_action\">";
+            html += " <thead>";
+            html += "<tr class=\"headings\">";
+            html += "<th class=\"column-title\"><b>Name</></th>";
+            html += "<th class=\"column-title\"><b>Number</b></th>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<td colspan='4' class='text-center'>No Data Found</td>";
+            html += "</tr>";
+            html += "</thead>";
+            html += " </table>";
+            $('#appenddata').html(html);
+           $('#buddyListModal').modal('show');
+         return false;
+        }
+
+        }
+      });
+
+    }
+
+
+</script>
+
+
+</body>
+</html>
+

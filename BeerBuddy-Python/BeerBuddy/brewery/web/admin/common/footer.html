@@ -1,0 +1,112 @@
+<footer class="footer">
+        <div class=" container-fluid ">
+          <nav>
+            <ul>
+              <li>
+                <a href="https://www.creative-tim.com">
+                  <!-- Creative Tim -->
+                </a>
+              </li>
+              <li>
+                <a href="http://presentation.creative-tim.com">
+                  <!-- About Us -->
+                </a>
+              </li>
+              <li>
+                <a href="http://blog.creative-tim.com">
+                  <!-- Blog -->
+                </a>
+              </li>
+            </ul>
+          </nav>
+          <div class="copyright" id="copyright">
+            &copy; <script>
+              document.getElementById('copyright').appendChild(document.createTextNode(new Date().getFullYear()))
+            </script>, Admin Panel Owned By BeerBuddy Team
+          </div>
+        </div>
+      </footer>
+    </div>
+  </div>
+  <!--   Core JS Files   -->
+  
+  <!-- end -->
+  <script src="{{STATIC}}assets/js/core/jquery.min.js"></script>
+  <script src="{{STATIC}}assets/js/core/popper.min.js"></script>
+  <script src="{{STATIC}}assets/js/core/bootstrap.min.js"></script>
+  <script src="{{STATIC}}assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+  <!--  Google Maps Plugin    -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCASmwtpQ2-5Yr6ENxuYnTlTh6WYyFL8gI&libraries=places&callback=initMap" async defer></script>
+  <!-- Chart JS -->
+  <script src="{{STATIC}}assets/js/plugins/chartjs.min.js"></script>
+  <!--  Notifications Plugin    -->
+  <script src="{{STATIC}}assets/js/plugins/bootstrap-notify.js"></script>
+  <!-- Control Center for Now Ui Dashboard: parallax effects, scripts for the example pages etc -->
+  <script src="{{STATIC}}assets/js/now-ui-dashboard.min.js?v=1.5.0" type="text/javascript"></script>
+  <!-- Now Ui Dashboard DEMO methods, don't include it in your project! -->
+  <!-- <script src="{{STATIC}}assets/demo/demo.js"></script>  -->
+
+  <!-- datepicker -->
+  <!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>  
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.js"></script> --> 
+  <script src="{{STATIC}}assets/js/datepicker/jquery.js"></script>
+  <script src="{{STATIC}}assets/js/datepicker/bootstrap.min.js"></script>
+  <script src="{{STATIC}}assets/js/datepicker/bootstrap-datepicker.js"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+                
+                $('#startdate').datepicker({
+                    autoclose: true,
+                    format: "mm-dd-yyyy",
+                    startDate: new Date()
+                }).on('changeDate', function(selected){
+                  startdate = new Date(selected.date.valueOf());
+                  startdate.setDate(startdate.getDate(new Date(selected.date.valueOf())));
+                  $('#enddate').datepicker('setStartDate', startdate);
+                });
+
+                $('#enddate').datepicker({
+                    autoclose: true,
+                    format: "mm-dd-yyyy",
+                    startDate: '+1d'
+                }).on('changeDate', function(selected){
+                  FromEndDate = new Date(selected.date.valueOf());
+                  FromEndDate.setDate(FromEndDate.getDate(new Date(selected.date.valueOf())));
+                  $('#startdate').datepicker('setEndDate', FromEndDate);
+                });
+    
+          // $('#startdate').datepicker({​​​​​​​​
+          //   autoclose:true,
+          //   format:'dd/mm/yyyy',
+          //   startDate: new Date()
+          // }​​​​​​​​).on('changeDate', function(selected){​​​​​​​​
+          //   startDate = newDate(selected.date.valueOf());
+          //   startDate.setDate(startDate.getDate(newDate(selected.date.valueOf())));
+          //   $('#enddate').datepicker('setStartDate', startDate);
+          // }​​​​​​​​); 
+
+          // $('#enddate').datepicker({​​​​​​​​
+          //   autoclose:true,
+          //   format:'dd/mm/yyyy',
+          //   startDate: new Date()
+          // }​​​​​​​​).on('changeDate', function(selected){​​​​​​​​
+          //   FromEndDate = newDate(selected.date.valueOf());
+          //   FromEndDate.setDate(FromEndDate.getDate(newDate(selected.date.valueOf())));
+          //   $('#startdate').datepicker('setEndDate', FromEndDate);
+          // }​​​​​​​​);
+
+
+            
+    });
+  </script>
+  <!-- <script>
+    $(document).ready(function() {
+      // Javascript method's body can be found in assets/js/demos.js
+      demo.initGoogleMaps();
+    });
+  </script> -->
+  
+</body>
+
+</html>

@@ -1,0 +1,54 @@
+{% include "users/web/admin/common/header.html" %}
+{% load static %}
+{% get_static_prefix as STATIC %}
+{% include "users/web/admin/common/menu.html" %}
+<title>BeerBuddy:PrivacyPolicy</title>
+<div id="page-wrapper">
+    <div class="row page-titles">
+        <div class="col-md-5 align-self-center">
+            <h3 class="text-themecolor">Pivacy & Policy</h3>
+        </div>
+        <div class="col-md-7 align-self-center">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><!--<a href="/web/users/dashboard">-->Home</a></li>
+                <li class="breadcrumb-item active">Pivacy & Policy</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <div style="padding:20px">
+                                <br>
+                                <h4>Title</h4>
+                                <p>{{privacy_policy.title}}</p>
+                                <br>
+                                <h4>Slug</h4>
+                                <p>{{privacy_policy.slug}}</p>
+                                <br>
+                                <h4>Description</h4>
+                                <p>
+                                    {{privacy_policy.content|safe}}
+                                </p>
+                                <p><a href="/web/users/edit-privacy-policy/{{privacy_policy.id}}"
+                                      class="btn btn-info"></i>
+                                    Edit</a></p>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
+{% include "users/web/admin/common/footer.html" %}

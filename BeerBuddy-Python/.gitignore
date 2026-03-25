@@ -1,0 +1,6 @@
+BeerBuddy/.env
+
+**/__pycache__/*
+BeerBuddy/BeerBuddy/__init__.py
+**/.DS_Store
+media_cdn/*

@@ -1,0 +1,80 @@
+{% load static %}
+{% get_static_prefix as STATIC %}
+<body>
+    <div id="wrapper">
+        <div class="fakeLoader"></div>
+        <!-- Navigation -->
+        <nav class="navbar navbar-default navbar-static-top" style="margin-bottom: 0">
+            <div class="navbar-header customAd-color">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+               <!-- <a class="navbar-brand" href="/web/users/dashboard?type=weekly" style="padding: 0;">--><img src="{{STATIC}}assets/img/head-logo.png" class="img-responsive customAd-logo" alt="Logo">
+            </div>
+            <!-- /.navbar-header -->
+
+            <ul class="nav navbar-top-links navbar-left header-search-form hidden-xs">
+                <li><a class="menu-brand" id="menu-toggle"><span class="fa-2x fa fa-bars"></span></a></li>
+            </ul>
+             <ul class="nav navbar-top-links navbar-right">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                      <span>{{request.user.username}}</span>
+                        <span class=" fa fa-angle-down"></span>
+						</a>
+                    <ul class="dropdown-menu dropdown-user right-swip">
+                        <!-- <li><a href="/web/users/profile/"><i class="fa fa-user fa-fw"></i>Profile</a>
+                        </li> -->
+                        <!-- <li><a href="/web/users/change_password/"><i class="fa fa-gear fa-fw"></i> Change Password</a>
+                        </li> -->
+                        <li><a href="/web/users/logout/"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
+                        </li>
+
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+            </ul>
+            <!-- /.navbar-top-links -->
+
+            <!-- Sidebar Navigation -->
+            <div class="navbar-default sidebar" role="navigation">
+                <div class="sidebar-nav navbar-collapse">
+                    <ul class="nav" id="side-menu">
+                        <!-- <li class="{% if nbar == 'dashboard' %}active{% endif %}">
+                            <a href="/web/users/dashboard?type=weekly"><i class="fa fa-bullseye"></i>Dashboard</a>
+                        </li> -->
+                        <li class="{% if nbar == 'brewery_managment' %}active{% endif %}">
+                            <a href="/web/users/brewery_management/"><i class="fa fa-users"></i>Brewery Management</a>
+                        </li>
+                        <li class="{% if nbar == 'brewery_register' %}active{% endif %}">
+                        <a href="/web/users/brewery_registration/"><i class="fa fa-users"></i>Brewery Registration</a>
+                        </li>
+                        <!-- <li class="{% if nbar == 'check-in' %}active{% endif %}">
+                            <a href="/web/beershops/check-in/"><i class="fa fa-check-square-o"></i>Check Ins</a>
+                        </li> -->
+                         <!-- <li class="{% if nbar == 'event_management' %}active{% endif %}">
+                            <a href="/web/events/event_management/"><i class="fa fa-calendar" aria-hidden="true"></i>   Event</a>
+                        </li> -->
+                        <li class="{% if nbar == 'change_password' %}active{% endif %}">
+                            <li><a><i class="fa fa-cogs"></i> Settings <span class="fa fa-chevron-down"></span></a>
+                                    <ul class="nav child_menu">
+                                        <li><a href="/web/users/privacy-policy/">Privacy Policy </a></li>
+                                        <li><a href="/web/users/terms-condition/">Terms & Conditions </a></li>
+                                        <li><a href="/web/users/change_password/"></i>Change Password</a></li>
+                                    </ul>
+                                </li>
+
+                        </li>
+
+                        <li>
+                            <a href="/web/users/logout/"><i class="fa fa-sign-out"></i>Logout</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Sidebar Navigation -->
+        <div id="page-wrapper">

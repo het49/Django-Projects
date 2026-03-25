@@ -1,0 +1,365 @@
+{% include "users/web/admin/common/header.html" %}
+{% load static %}
+{% get_static_prefix as STATIC %}
+
+{% include "users/web/admin/common/menu.html" %}
+<a class="attribution" href="http://fontawesome.io/"><i class="fa fa-font-awesome"></i> fontawesome.io</a>
+<style>
+
+.stars-outer {
+  display: inline-block;
+  position: relative;
+  font-family: FontAwesome;
+}
+
+.stars-outer::before {
+  content: "\f006 \f006 \f006 \f006 \f006";
+}
+
+.stars-inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 0;
+}
+
+.stars-inner::before {
+  content: "\f005 \f005 \f005 \f005 \f005";
+  color: #f8ce0b;
+}
+
+.attribution {
+  font-size: 12px;
+  color: #444;
+  text-decoration: none;
+  text-align: center;
+  position: fixed;
+  right: 10px;
+  bottom: 10px;
+  z-index: -1;
+}
+.attribution:hover {
+  color: #1fa67a;
+}
+</style>
+<title>BeerBuddy:Check Ins</title>
+  <div id="page-wrapper">
+            <div class="row page-titles">
+                <div class="col-md-5 align-self-center">
+                    <h3 class="text-themecolor">Check Ins</h3>
+                </div>
+                <div class="col-md-7 align-self-center">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/web/users/dashboard">Home</a></li>
+                        <li class="breadcrumb-item active">Check Ins</li>
+                    </ol>
+                </div>
+            </div>
+
+<div class="container-fluid">
+<div class="row">
+    <div class="col-md-12 col-sm-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <div class="table-wrapper">
+                        <div class="table-title theme-bg">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <h2><small class="h3">Check Ins</small></h2>
+                                </div>
+                                <div class="col-sm-6">
+                                    <a href="/web/beershops/exportcheckinuser/" class="btn btn-default"><i class="fa fa-download" aria-hidden="true"></i> <span>Export to Excel</span></a>
+                                </div>
+                            </div>
+                        </div>
+                       <div class="row">
+                         <div class="col-sm-12 table-responsive">
+                            <table id="datatable" class="table table-striped table-hover table-sm table-responsive">
+                                <thead>
+                                        <tr>
+                                            <th><b>S.No.</b></th>
+                                        <th><b>Name</b></th>
+                                        <th><b>Email ID</b></th>
+                                        <th><b>Phone No</b></th>
+                                        <th><b>Beer Shop</b></th>
+                                        <th><b>Location</b></th>
+                                        <th><b>Check In Message</b></th>
+                                        <th><b>Invitees</b></th>
+                                        <th><b>Images</b></th>
+                                        <th><b>Ratings</b></th>
+                                        <th><b>Feedback</b></th>
+                                        <th><b>Check In Status</b></th>
+
+                                    </tr>
+                                </thead>
+                                                <tbody>
+                                                {% for checkin_user in user_checkin_list %}
+
+                                                    <tr>
+
+                                                        <td>{{ forloop.counter }}</td>
+                                                        <td>{% if checkin_user.user.username %}{{checkin_user.user.username}}{% else %}{% endif %}</td>
+                                                        <td>{% if checkin_user.user.email %}{{checkin_user.user.email}}{% else %}{% endif %}</td>
+                                                        <td>{% if checkin_user.user.phone_no %}{{checkin_user.user.phone_no}}{% else %}{% endif %}</td>
+                                                        <td>{% if checkin_user.beer.name %}{{checkin_user.beer.name}}{% else %}{% endif %}</td>
+                                                        <td>{% if checkin_user.beer.vicinity %}{{checkin_user.beer.vicinity}}{% else %}{% endif %}</td>
+                                                        <td>{% if checkin_user.message %}{{checkin_user.message}}{% else %}{% endif %}</td>
+
+                                                        <td><a href="javascript:void(0);"  class="text-primary"  onclick="return userinvities(id={{checkin_user.user.id}},bid={{checkin_user.event.id}}); "><b>See Lists</b></a></td>
+                                                        <td> <a href="/web/beershops/checkout_images/{{checkin_user.user.id}}" > <i class="fa fa-file-image-o" aria-hidden="true"></i> </a></td>
+
+
+                                                        <td>
+
+                                                                    <div class="stars-outer">
+                                                                      <div class="stars-inner" style="width:{{checkin_user.star_percentage}}%"></div>
+                                                                    </div>
+                                                            </span>
+
+                                                        </td>
+                                                        <td><a href="javascript:void(0);"  class="text-primary"  onclick="return feedbacklist(id = {{checkin_user.user.id}},bid = {{checkin_user.beer.id}}); "><b>See Lists</b></a></td>
+                                                        <td>
+                                                        <div class="d-flex">
+                                                        <style>
+                                                            .fa.green{color:#048c47;}
+                                                            .fa.red{color:#f00;}
+                                                        </style>
+                                                        <div class="status-btn">
+                                                              {% if checkin_user.status == True %}
+                                                            <a href="javascript:void(0);" ><i class="fa fa-toggle-on green status{{checkin_user.id}}" title="Active"></i></a>
+                                                            {% else %}
+                                                            <a href="javascript:void(0);" ><i class="fa fa-toggle-off red status{{checkin_user.id}}" title="Inactive"></i></a>
+                                                            {% endif %}
+
+
+                                                            </div>
+                                                        </div>
+                                                     </td>
+
+                                                    </tr>
+                                                 {% endfor %}
+                                                </tbody>
+                                            </table>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+  </div>
+
+
+
+
+
+<div id="userInvites" class="modal fade">
+<div class="modal-dialog">
+    <div class="modal-content">
+            <div class="modal-header theme-bg">
+                <h4 class="modal-title">Invitees</h4>
+            </div>
+            <div class="modal-body row">
+                <div class="x_panel">
+                                <div class="x_content">
+                                    <div class="table-responsive">
+                                        <span id="appenddata2"></span>
+                                    </div>
+                                  </div>
+                                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-default" data-dismiss="modal" value="Close">
+            </div>
+    </div>
+</div>
+</div>
+
+<div id="userFeedbacks" class="modal fade">
+  <div class="modal-dialog">
+    <div class="modal-content">
+            <div class="modal-header theme-bg">
+                <h4 class="modal-title">Feedback</h4>
+            </div>
+            <div class="modal-body row">
+                <div class="x_panel">
+                                <div class="x_content">
+                                    <div class="table-responsive">
+                                        <span id="appenddatas"></span>
+                                    </div>
+                                  </div>
+                                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" class="btn btn-default" data-dismiss="modal" value="Close">
+            </div>
+    </div>
+ </div>
+</div>
+
+
+
+
+
+{% include "users/web/admin/common/footer.html" %}
+
+<script>
+
+
+function changeusercheckinstatus(obj){
+      var id = obj;
+      $.ajax({
+        type: 'POST',
+        url:  '/web/beershops/changecheckinstatus/',
+        data:  {'id': id,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        success: function (response) {
+            if(response.result == true){
+                $('.status'+id).removeClass('fa fa-toggle-off red');
+                $('.status'+id).addClass('fa fa-toggle-on green');
+                $('#msg').html('<div class="alert alert-success"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Success!</strong> User successfully enabled.</div>')
+                $('#inputId').prop('readonly', true);
+            } else if(response.result == false) {
+                $('.status'+id).removeClass('fa fa-toggle-on green');
+                $('.status'+id).addClass('fa fa-toggle-off red');
+               $('#msg').html('<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Danger!</strong> User successfully disabled.</div>')
+               $('#inputId').prop('readonly', true);
+               } else {
+                $('#msg').html('<div class="alert alert-danger"><a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Danger!</strong> Something went wrong please try again.</div>')
+            }
+        }
+      });
+
+    }
+
+  </script>
+
+<script>
+function userinvities(id,bid){
+      $.ajax({
+        type: 'POST',
+        url:  '/web/beershops/userinvites/',
+        data:  {'id': id,'bid':bid,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        success: function (response) {
+        if(response.status=='success'){
+
+            var obj = response.result;
+            var html = "";
+            html += "<table class=\"table table-striped jambo_table bulk_action\">";
+            html += " <thead>";
+            html += "<tr class=\"headings\">";
+            html += "<th class=\"column-title\"><b>Name</b></th>";
+            html += "<th class=\"column-title\"><b>Status</b></th>";
+
+            html += "</tr>";
+            html += "</thead>";
+            for (let i = 0; i < obj.length; i++) {
+                html += "<tbody>";
+                html += "<tr>";
+                html += "<td>"+obj[i].invitee.get_full_name+"</td>";
+                html += "<td>"+obj[i].status+"</td>";
+
+                html += "</tr>";
+                html += "</tbody>";
+            }
+            html += " </table>";
+            $('#appenddata2').html(html);
+           $('#userInvites').modal('show');
+        } else if(response.status == 'error'){
+            var obj = response.result;
+            var html = "";
+            html += "<table class=\"table table-striped jambo_table bulk_action\">";
+            html += " <thead>";
+            html += "<tr class=\"headings\">";
+            html += "<th class=\"column-title\"><b>Name</b></th>";
+            html += "<th class=\"column-title\"><b>Status</b></th>";
+
+            html += "</tr>";
+             html += "<tr>";
+            html += "<td colspan='4' class='text-center'>No Data Found</td>";
+            html += "</tr>";
+            html += "</thead>";
+            html += " </table>";
+            $('#appenddata2').html(html);
+           $('#userInvites').modal('show');
+        }
+
+        }
+      });
+
+    }
+
+  </script>
+
+<script>
+function feedbacklist(id,bid){
+      $.ajax({
+
+
+        type: 'POST',
+        url:  '/web/beershops/userfeedbacks/',
+        data:  {'id': id,'bid': bid,'csrfmiddlewaretoken': '{{ csrf_token }}'},
+        success: function (response) {
+        if(response.status=='success'){
+
+            var obj = response.result;
+            var html = "";
+            html += "<table class=\"table table-striped jambo_table bulk_action\">";
+            html += " <thead>";
+            html += "<tr class=\"headings\">";
+            html += "<th class=\"column-title\"><b>Beer Shop</></th>";
+            html += "<th class=\"column-title\"><b>Rating</></th>";
+            html += "<th class=\"column-title\"><b>Feedback</></th>";
+            html += "<th class=\"column-title\"><b>Created At</></th>";
+            html += "</tr>";
+            html += "</thead>";
+            for (let i = 0; i < obj.length; i++) {
+                html += "<tbody>";
+                html += "<tr>";
+                html += "<td>"+obj[i].beer_shop+"</td>";
+                html += "<td>"+obj[i].rating+"</td>";
+                html += "<td>"+obj[i].feedback+"</td>";
+                html += "<td>"+obj[i].created_at+"</td>";
+                html += "</tr>";
+                html += "</tbody>";
+            }
+            html += " </table>";
+            $('#appenddatas').html(html);
+           $('#userFeedbacks').modal('show');
+
+        }  else if(response.status == 'error'){
+            var obj = response.result;
+            var html = "";
+            html += "<table class=\"table table-striped jambo_table bulk_action\">";
+            html += " <thead>";
+            html += "<tr class=\"headings\">";
+            html += "<th class=\"column-title\"><b>Beer Shop</></th>";
+            html += "<th class=\"column-title\"><b>Rating</></th>";
+            html += "<th class=\"column-title\"><b>Feedback</></th>";
+            html += "<th class=\"column-title\"><b>Created At</></th>";
+            html += "</tr>";
+            html += "<tr>";
+            html += "<td colspan='4' class='text-center'>No Data Found</td>";
+            html += "</tr>";
+            html += "</thead>";
+            html += " </table>";
+            $('#appenddatas').html(html);
+           $('#userFeedbacks').modal('show');
+        }
+        }
+      });
+
+    }
+
+  </script>
+
+
+
+
+

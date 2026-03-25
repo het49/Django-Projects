@@ -1,0 +1,33 @@
+{% load static %}
+{% get_static_prefix as STATIC %}
+
+<html>
+<head>
+<meta charset="utf-8">
+    <!--{% block title %}-->
+    <!--{% endblock title %}-->
+<link href="style.css" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,500,500i,700" rel="stylesheet">
+</head>
+
+<body>
+<header>
+  <div class="wrapper">
+  <div class = "header-logo"><img src="{{STATIC}}assets/img/head-logo.png"> </div>
+</header>
+<section>
+  <div class="term-page">
+    <div class="wrapper">
+       <h2> {{object.title}}</h2>
+      <div class="contentBox">
+        <div class="content textInfo">
+          {{object.content|safe}}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+</body>
+</html>
