@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Felicia</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- MATERIAL DESIGN ICONIC FONT -->
+    <link rel="stylesheet" href="{% static 'fonts/material-design-iconic-font/css/material-design-iconic-font.min.css' %}">
+    
+    <!-- STYLE CSS -->
+    <link rel="stylesheet" href="{% static 'css/style1.css' %}">
+  </head>
+
+  <body>
+
+    <!-- <div class="wrapper" style="background-image: url('/static/images/bg-registration-form-2.jpg');"> -->
+    <div class="wrapper" style="background-color: black;">
+
+      <div class="inner">
+        <form action="" method="POST">
+          {% csrf_token %}
+          <h3>Felicia | Login</h3>
+            <div class="form-wrapper">
+              <label for="">User Name</label>
+              <input type="text" name="username" class="form-control">
+            </div>
+          
+          <div class="form-wrapper">
+            <label for="">Password</label>
+            <input type="password" name="password" class="form-control">
+          </div>
+          <div class="form-wrapper">
+        <label for="">Don't have an Account? <a href="/register">Register</a> Here to Shop on FELICIA</label>
+            
+          </div>
+          <div class="form-wrapper">
+            
+          </div>
+        
+          <button>Login</button>
+        </form>
+        
+      </div>
+    </div>
+    <!-- alert msg -->
+  
+    
+  </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+</html>
+

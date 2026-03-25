@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block content %}
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-10">
+            <h2>This is the result of your search</h2><br><br>
+            {% for post in queryset %}
+
+            <img src="{{post.thumbnail.url}}" style="height:100px;width:200px"><br><br>
+            <a href="{{post.get_absolute_url}}"><h2 style="color:blue">{{post.title}}</h2></a><br>
+
+                {{post.overview}}
+            <br><br>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

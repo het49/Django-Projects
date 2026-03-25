@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Contact Us{% endblock %}
+
+{% block body %}
+<div class="container">
+    <br>
+    <h4 style="color:blue;" class="font-weight-bold font-italic">Contact Us</h4>
+    <br>
+    <form method="POST">
+        {% csrf_token %}
+        <div>
+            <div class="form-group">
+                <label style="color:black;" class="font-weight-bold font-italic">Name</label>
+                <input type="text" class="form-control" name="name" placeholder="Enter Name" >
+            </div>
+        </div>
+
+        <div>
+            <div class="form-group">
+                <label style="color:black;" class="font-weight-bold font-italic">Email</label>
+                <input type="text" class="form-control" name="email" placeholder="Enter Email">
+            </div>
+        </div>
+
+        <div>
+            <div class="form-group">
+                <label style="color:black;" class="font-weight-bold font-italic">Subject</label>
+                <input type="text" class="form-control" name="subject" placeholder="Enter Subject">
+            </div>
+        </div>
+
+        <div>
+            <div class="form-group">
+                <label style="color:black;" class="font-weight-bold font-italic">Description</label>
+                <textarea class="form-control" name="desc" rows="5"></textarea>
+            </div>
+        </div>
+
+        <input style="margin-left:auto;margin-right:auto;display:block;margin-top:5%;margin-bottom:0%" type="submit" value="Submit" class="btn btn-dark">
+    </form>
+</div>
+{% endblock %}

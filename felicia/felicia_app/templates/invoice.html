@@ -1,0 +1,118 @@
+<html>
+{% load static %}
+<head>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<!----- Include the above in your HEAD tag ---------->
+
+
+<body>
+    <!-- {% for key,value in a.items %}
+        <p>{{value}}</p>
+        <h5>{{key}}</h5>
+        {% for p in value %}
+        <h5>{{p}}</h5>
+        {% endfor %} 
+        {% endfor %}-->
+ <div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body p-0">
+                    <div class="row p-2" style="background-color: powderblue;">
+                        <div class="col-md-6">
+                             <img src="{% static 'images\f.png' %}" width="300px;" height="130x;"> 
+                        </div>
+    {% for o in order %}
+                        <div class="col-md-5 text-right">
+                            <p class="font-weight-bold mb-1">Invoice #F{{o.order_id}}</p>
+                            <p class="text-muted">Due to:{% now "jS F Y H:i" %}</p>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+                    
+                    <div class="row pb-5 p-5">
+                        <div class="col-md-6">
+                        <p class="font-weight-bold mb-4">Client Information</p>
+                            <p class="mb-1">{{o.name}}</p>
+                            <p class="mb-1">{{o.address}}</p>
+                            <p class="mb-1">{{o.city}}:{{o.zip_code}}</p>
+                            <p class="mb-1">{{o.state}}</p>
+                        </div>
+
+                        <div class="col-md-6 text-right">
+                            <p class="font-weight-bold mb-4">Payment Details</p>
+                            <p class="mb-1"><span class="text-muted">VAT:123654789 </span> </p> 
+                        <p class="mb-1"><span class="text-muted">Payment Type: </span> CC/DC</p>
+                            <p class="mb-1"><span class="text-muted">Name: {{o.name}}</span> </p>
+                            <p class="mb-1"><span class="text-muted">MO: {{o.phone}}</span> </p>
+                            <p class="mb-1"><span class="text-muted">Email:{{o.email}}</span></p>
+
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <div class="row p-5">
+                        <div class="col-md-12">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="border-0 text-uppercase small font-weight-bold">ProductNo</th>
+                                        <!-- <th class="border-0 text-uppercase small font-weight-bold">Description</th> -->
+                                        <th class="border-0 text-uppercase small font-weight-bold">Quantity</th>
+                                        <th class="border-0 text-uppercase small font-weight-bold">Item</th>
+                                        <th class="border-0 text-uppercase small font-weight-bold">Unit Cost</th>
+                                        <!-- <th class="border-0 text-uppercase small font-weight-bold">Total</th> -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for key,value in a.items %}
+                                    <tr>
+                                        <td>{{key}}</td>
+
+                                    {% for p in value %}
+                                    
+                                        <td>{{p}}</td>
+                                    {% endfor %}
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% for o in order %}
+
+                    <div class="d-flex flex-row-reverse bg-dark text-white p-4">
+                        <div class="py-3 px-5 text-right">
+                            <div class="mb-2">Grand Total</div>
+                            <div class="h4 font-weight-light">INR:{{o.amount}}</div>
+                        </div>
+
+                        <div class="py-3 px-5 text-right">
+                            <div class="mb-2">Discount</div>
+                            <div class="h4 font-weight-light">0%</div>
+                        </div>
+
+                        <div class="py-3 px-5 text-right">
+                            <div class="mb-2">Sub - Total amount</div>
+                            <div class="h4 font-weight-light">INR:{{o.amount}}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                       <center><a href="/test"><button class="btn btn-primary">Home</button></a></center>
+
+                </div>
+            
+            </div>
+        </div>
+    </div>
+    
+    <div class="text-light mt-5 mb-5 text-center small">by : <a class="text-light" target="_blank" href="http://totoprayogo.com">totoprayogo.com</a></div>
+ 
+</div>
+ <!--js -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>    
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+</html>

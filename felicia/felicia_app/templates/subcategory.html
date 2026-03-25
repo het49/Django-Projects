@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+
+<div class="container">
+<div class="row mt-5">
+	{% for s in subc %}
+	<div class="col-3 mb-3">
+<div class="card" style="width: 12rem;">
+  <img class="card-img-top" src="{{ s.image.url }}" alt="Card image cap" style="height: 200px">
+  <div class="card-body">
+    
+    <a href="{% url 'testproduct' s.id %}" class="btn btn-dark">{{ s.subcategory }}</a>
+  </div>
+</div>
+</div>
+{% endfor %}
+</div>
+</div>
+{% endblock %}
